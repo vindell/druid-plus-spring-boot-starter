@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("spring.datasource.druid.stat")
 public class DruidStatProperties {
 
-	protected Boolean enable = false;
+	protected Boolean enabled = false;
 
 	/**
 	 * StatViewServlet 参数
@@ -39,12 +39,12 @@ public class DruidStatProperties {
 	 */
 	protected String[] pointcutPatterns;
 
-	public Boolean getEnable() {
-		return enable;
+	public Boolean getEnabled() {
+		return enabled;
 	}
 
-	public void setEnable(Boolean enable) {
-		this.enable = enable;
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public String getServletPath() {

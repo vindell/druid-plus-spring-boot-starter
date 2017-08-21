@@ -23,6 +23,6 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:  
       stat:
-        enable: false
+        enabled: false
     
         
