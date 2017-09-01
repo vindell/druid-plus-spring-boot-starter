@@ -12,9 +12,9 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.jdbc.DatabaseDriver;
 import org.springframework.context.annotation.Bean;
@@ -48,6 +48,12 @@ public class DruidConfiguration implements BeanFactoryAware {
 	
 	private BeanFactory beanFactory;
 	
+	@SuppressWarnings("unchecked")
+	protected <T> T createDataSource(DataSourceProperties properties,
+			Class<? extends DataSource> type) {
+		return (T) properties.initializeDataSourceBuilder().type(type).build();
+	}
+	
 	// https://github.com/alibaba/druid/wiki/%E9%85%8D%E7%BD%AE-wallfilter
 	protected List<Filter> getProxyFilters(DruidProperties druidProperties) {
 		
@@ -71,23 +77,19 @@ public class DruidConfiguration implements BeanFactoryAware {
 		return filters;
 	}
 	
-	@SuppressWarnings("unchecked")
-	protected <T> T createDataSource(DataSourceProperties dataSourceProperties, Class<? extends DataSource> type) {
-		return (T) dataSourceProperties.initializeDataSourceBuilder().type(type).build();
-	}
 	
 	/**
 	 * @description ： 配置DataSource
 	 * @author ： <a href="https://github.com/vindell">vindell</a>
 	 * @date ：2017年8月19日 下午4:38:49
-	 * @param dataSourceProperties
+	 * @param properties
 	 * @param druidProperties
 	 * @return
 	 * @see org.springframework.boot.autoconfigure.jdbc.DataSourceConfiguration.Tomcat 仿写的你可以去了解
 	 */
 	@Bean
-	@ConditionalOnMissingBean
-	public DruidDataSource dataSource(DataSourceProperties dataSourceProperties, DruidProperties druidProperties) {
+	@ConfigurationProperties(prefix = "spring.datasource.druid")
+	public DruidDataSource dataSource(DataSourceProperties properties, DruidProperties druidProperties) {
 		
 		ConfigurableBeanFactory configurableBeanFactory = (ConfigurableBeanFactory) beanFactory;
 
@@ -98,15 +100,14 @@ public class DruidConfiguration implements BeanFactoryAware {
 			dataSource.setName(druidProperties.getName());
 		}
 		// 这一项可配可不配，如果不配置druid会根据url自动识别dbType，然后选择相应的driverClassName
-		dataSource.setDriverClassName(dataSourceProperties.determineDriverClassName());
+		dataSource.setDriverClassName(properties.determineDriverClassName());
 		// jdbcUrl: 连接数据库的url 
-		dataSource.setUrl(dataSourceProperties.determineUrl());
+		dataSource.setUrl(properties.determineUrl());
 		// username: 连接数据库的用户名
-		dataSource.setUsername(dataSourceProperties.determineUsername());
+		dataSource.setUsername(properties.determineUsername());
 		// password: 连接数据库的密码
-		dataSource.setPassword(dataSourceProperties.determinePassword());
-
-		DruidDataSource druidDataSource = createDataSource(dataSourceProperties, DruidDataSource.class);
+		dataSource.setPassword(properties.determinePassword());
+		DruidDataSource druidDataSource = createDataSource(properties, DruidDataSource.class);
 
 		// druid 连接池参数 
 		druidDataSource.configFromPropety(druidProperties.toProperties());
@@ -136,7 +137,7 @@ public class DruidConfiguration implements BeanFactoryAware {
 			// 用来检测连接是否有效的sql，要求是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会其作用。
 			druidDataSource.setValidationQuery(druidProperties.getValidationQuery());
 		} else {
-			DatabaseDriver databaseDriver = DatabaseDriver.fromJdbcUrl(dataSourceProperties.determineUrl());
+			DatabaseDriver databaseDriver = DatabaseDriver.fromJdbcUrl(properties.determineUrl());
 			String validationQuery = databaseDriver.getValidationQuery();
 			if (validationQuery != null) {
 				dataSource.setTestOnBorrow(druidProperties.getTestOnBorrow());
