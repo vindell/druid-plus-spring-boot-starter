@@ -17,16 +17,30 @@
 	<!-- 数据库配置文件位置；Spring3.0以上必须增加ignore-unresolvable="true"否则报错 -->
 	<context:property-placeholder location="classpath:datasource.properties" ignore-unresolvable="true"/>  
 	
-	<bean id="wall-filter-config" class="com.alibaba.druid.wall.WallConfig" init-method="init">      
-		 <!-- 指定配置装载的目录  -->      
-		 <property name="dir" value="META-INF/druid/wall/mysql" />  
-	</bean>   
-	  
-	<bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">      
-		<property name="dbType" value="mysql" />      
-		<property name="config" ref="wall-filter-config" />  
-	</bean>
 	
+	<!-- https://github.com/alibaba/druid/wiki/%E9%85%8D%E7%BD%AE-wallfilter -->
+	<bean id="wall-filter-config" class="com.alibaba.druid.wall.WallConfig" init-method="init">
+		<!-- 指定配置装载的目录  -->
+		<property name="dir" value="META-INF/druid/wall/oracle" />
+		<!-- 是否允许语句中存在注释，Oracle的用户不用担心，Wall能够识别hints和注释的区别 -->
+		<property name="commentAllow" value="true" />
+	    <!-- 是否允许非以上基本语句的其他语句，缺省关闭，通过这个选项就能够屏蔽DDL。 -->
+	    <property name="noneBaseStatementAllow" value="true" />
+	    <!-- 是否允许一次执行多条语句，缺省关闭 -->
+	    <property name="multiStatementAllow" value="true" />
+	    <!-- 解除union关键字检查 -->
+	    <property name="selectUnionCheck" value="false" />
+	</bean>
+
+  	<bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
+  		<property name="dbType" value="mysql" /> 
+      	<property name="config" ref="wall-filter-config" />
+     	<!-- 对被认为是攻击的SQL进行LOG.error输出 
+	    <property name="logViolation" value="false" />-->
+	    <!-- 对被认为是攻击的SQL抛出SQLExcepton -->
+	    <property name="throwException" value="true" />
+    </bean>
+    
 	<bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">    
         <property name="mergeSql" value="true" />
 	</bean>
@@ -68,6 +82,7 @@
 	    <property name="resultSetOpenAfterLogEnabled" value="false" />
 	    <property name="resultSetCloseAfterLogEnabled" value="false" />
 	</bean>
+	
 	
 	<!-- druid 数据库连接池 -->
 	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
