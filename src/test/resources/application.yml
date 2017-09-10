@@ -21,7 +21,8 @@ spring:
     username: xxx
     password: xxx
     type: com.alibaba.druid.pool.DruidDataSource
-    druid:
+    # Druid的数据源配置：
+    druid: 
       #配置这个属性的意义在于，如果存在多个数据源，监控的时候可以通过名字来区分开来。如果没有配置，将会生成一个名字，格式是：”DataSource-” + System.identityHashCode(this)
       #name: DataSource-Test
       #这一项可配可不配，如果不配置druid会根据url自动识别dbType，然后选择相应的driverClassName
