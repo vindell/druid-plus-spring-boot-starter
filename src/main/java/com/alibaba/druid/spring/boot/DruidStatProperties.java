@@ -2,9 +2,11 @@ package com.alibaba.druid.spring.boot;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("spring.datasource.druid.stat")
+@ConfigurationProperties(DruidStatProperties.PREFIX)
 public class DruidStatProperties {
-
+	
+	public static final String PREFIX = "spring.datasource.druid.stat";
+	
 	protected Boolean enabled = false;
 
 	/**

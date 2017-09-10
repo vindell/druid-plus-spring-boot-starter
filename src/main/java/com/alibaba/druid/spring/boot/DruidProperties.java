@@ -10,9 +10,11 @@ import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.wall.WallFilter;
 
 @SuppressWarnings("serial")
-@ConfigurationProperties("spring.datasource.druid")
+@ConfigurationProperties(DruidProperties.PREFIX)
 public class DruidProperties {
 
+	public static final String PREFIX = "spring.datasource.druid";
+	
 	/** 基本属性 url、user、password */
 	
 	protected String driverClassName;
