@@ -19,8 +19,7 @@ public class DruidProperties {
 	
 	protected String driverClassName;
 	/**
-	 * 配置这个属性的意义在于，如果存在多个数据源，监控的时候可以通过名字来区分开来。如果没有配置，将会生成一个名字，格式是：”DataSource-”
-	 * + System.identityHashCode(this)
+	 * 配置这个属性的意义在于，如果存在多个数据源，监控的时候可以通过名字来区分开来。如果没有配置，将会生成一个名字，格式是：”DataSource-” + System.identityHashCode(this)
 	 */
 	protected String name;
 	/** jdbcUrl: 连接数据库的url，不同数据库不一样 */
@@ -50,16 +49,17 @@ public class DruidProperties {
 	/** 获取连接时最大等待时间，单位毫秒。配置了maxWait之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置useUnfairLock属性为true使用非公平锁。 */
 	protected Long maxWait = 60000L;
 	/**
-	 * 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒;有两个含义：1) Destroy线程会检测连接的间隔时间 2)
+	 * 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位：毫秒;有两个含义：1) Destroy线程会检测连接的间隔时间 2)
 	 * testWhileIdle的判断依据，详细看testWhileIdle属性的说明
 	 */
 	protected Long timeBetweenEvictionRunsMillis = 60000L;
-	/** 配置一个连接在池中最小生存的时间，单位是毫秒 */
+	/** 配置一个连接在池中最小生存的时间，单位：毫秒 */
 	protected Long minEvictableIdleTimeMillis = 300000L;
+	/** 配置一个连接在池中最大生存的时间，单位:毫秒 */
 	protected Long maxEvictableIdleTimeMillis;
 	/** 超过时间限制是否回收 */
 	protected Boolean removeAbandoned = true;
-	/** 超过时间限制多长，单位是毫秒 ，180000毫秒=3分钟 */
+	/** 超过时间限制多长，单位：毫秒 ，180000毫秒=3分钟 */
 	protected Long removeAbandonedTimeoutMillis = 180000L;
 	/** 用来检测连接是否有效的sql，要求是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会其作用。 */
 	protected String validationQuery = "SELECT 1";
@@ -78,7 +78,7 @@ public class DruidProperties {
 	 * #日志用的filter:slf4j #防御SQL注入的filter:wall
 	 * 开启Druid的监控统计功能，mergeStat代替stat表示sql合并,wall表示防御SQL注入攻击
 	 */
-	protected String filters = "mergeStat,wall,log4j";
+	protected String filters = "mergeStat,wall,slf4j";
 
 	protected Boolean useGlobalDataSourceStat;
 	protected Long timeBetweenLogStatsMillis;
