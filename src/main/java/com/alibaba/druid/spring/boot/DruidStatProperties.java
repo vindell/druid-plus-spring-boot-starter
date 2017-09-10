@@ -19,7 +19,7 @@ public class DruidStatProperties {
 	protected String allow;
 	protected String deny;
 	protected String remoteAddress;
-	protected Boolean resetEnable;
+	protected Boolean resetEnable = true;
 	protected String jmxUrl;
 	protected String jmxUsername;
 	protected String jmxPassword;
@@ -30,7 +30,7 @@ public class DruidStatProperties {
 	protected String urlPatterns;
 	protected Boolean profileEnable = false;
 	protected Boolean sessionStatEnable = true;
-	protected Boolean sessionStatMaxCount;
+	protected Integer sessionStatMaxCount = 3000;
 	protected String exclusions;
 	protected String principalSessionName;
 	protected String principalCookieName;
@@ -161,11 +161,11 @@ public class DruidStatProperties {
 		this.sessionStatEnable = sessionStatEnable;
 	}
 
-	public Boolean getSessionStatMaxCount() {
+	public Integer getSessionStatMaxCount() {
 		return sessionStatMaxCount;
 	}
 
-	public void setSessionStatMaxCount(Boolean sessionStatMaxCount) {
+	public void setSessionStatMaxCount(Integer sessionStatMaxCount) {
 		this.sessionStatMaxCount = sessionStatMaxCount;
 	}
 

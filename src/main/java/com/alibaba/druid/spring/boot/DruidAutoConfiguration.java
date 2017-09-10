@@ -7,10 +7,6 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -41,9 +37,7 @@ import com.alibaba.druid.wall.WallFilter;
 	matchIfMissing = true
 )
 @EnableConfigurationProperties({ DruidProperties.class })
-public class DruidAutoConfiguration implements BeanFactoryAware {
-	
-	private BeanFactory beanFactory;
+public class DruidAutoConfiguration {
 	
 	@SuppressWarnings("unchecked")
 	protected <T> T createDataSource(DataSourceProperties properties,
@@ -84,11 +78,10 @@ public class DruidAutoConfiguration implements BeanFactoryAware {
 	 * @return
 	 * @see org.springframework.boot.autoconfigure.jdbc.DataSourceConfiguration.Tomcat 仿写的你可以去了解
 	 */
-	@Bean("dataSource")
-	public DruidDataSource dataSource(DataSourceProperties properties, DruidProperties druidProperties) {
+	@Bean("druidDataSource")
+	public DruidDataSource druidDataSource(DataSourceProperties properties, DruidProperties druidProperties) {
 		
-		ConfigurableBeanFactory configurableBeanFactory = (ConfigurableBeanFactory) beanFactory;
-		
+		// 创建 DruidDataSource 数据源对象
 		DruidDataSource dataSource = createDataSource(properties, DruidDataSource.class);
 		
 		// 配置这个属性的意义在于，如果存在多个数据源，监控的时候可以通过名字来区分开来。如果没有配置，将会生成一个名字，格式是：”DataSource-” + System.identityHashCode(this)
@@ -170,14 +163,9 @@ public class DruidAutoConfiguration implements BeanFactoryAware {
 		dataSource.setConnectProperties(druidProperties.getConnectionProperties());
 		
 		// 注册对象到上下文
-		configurableBeanFactory.registerSingleton(dataSource.getName(), dataSource);
+		//configurableBeanFactory.registerSingleton(dataSource.getName(), dataSource);
 		
 		return dataSource;
 	}
-	
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-    }
 	
 }

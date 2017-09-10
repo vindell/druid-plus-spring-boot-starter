@@ -80,14 +80,21 @@ public class DruidStatAutoConfiguration {
 		}
 
 		// 运行访问的IP
-		servletRegistrationBean.addInitParameter(StatViewServlet.PARAM_REMOTE_ADDR, statProperties.getRemoteAddress());
+		if(StringUtils.isNotEmpty(statProperties.getRemoteAddress())) {
+			servletRegistrationBean.addInitParameter(StatViewServlet.PARAM_REMOTE_ADDR, statProperties.getRemoteAddress());
+		}
 
 		// JMX配置
-		servletRegistrationBean.addInitParameter(StatViewServlet.PARAM_NAME_JMX_URL, statProperties.getJmxUrl());
-		servletRegistrationBean.addInitParameter(StatViewServlet.PARAM_NAME_JMX_USERNAME,
-				statProperties.getJmxUsername());
-		servletRegistrationBean.addInitParameter(StatViewServlet.PARAM_NAME_JMX_PASSWORD,
-				statProperties.getJmxPassword());
+		if(StringUtils.isNotEmpty(statProperties.getJmxUrl()) 
+				&& StringUtils.isNotEmpty(statProperties.getJmxUsername()) 
+				&& StringUtils.isNotEmpty(statProperties.getJmxPassword())) {
+			
+			servletRegistrationBean.addInitParameter(StatViewServlet.PARAM_NAME_JMX_URL, statProperties.getJmxUrl());
+			servletRegistrationBean.addInitParameter(StatViewServlet.PARAM_NAME_JMX_USERNAME,
+					statProperties.getJmxUsername());
+			servletRegistrationBean.addInitParameter(StatViewServlet.PARAM_NAME_JMX_PASSWORD,
+					statProperties.getJmxPassword());
+		}
 
 		return servletRegistrationBean;
 	}
@@ -106,6 +113,9 @@ public class DruidStatAutoConfiguration {
 		filterRegistrationBean.addUrlPatterns(statProperties.getUrlPatterns());
 
 		// Session监控配置
+		if (StringUtils.isEmpty(statProperties.getExclusions())) {
+			
+		}
 		filterRegistrationBean.addInitParameter(WebStatFilter.PARAM_NAME_PROFILE_ENABLE,
 				statProperties.getProfileEnable().toString());
 		filterRegistrationBean.addInitParameter(WebStatFilter.PARAM_NAME_SESSION_STAT_ENABLE,
@@ -120,12 +130,18 @@ public class DruidStatAutoConfiguration {
 		// 设置忽略请求
 		filterRegistrationBean.addInitParameter(WebStatFilter.PARAM_NAME_EXCLUSIONS, statProperties.getExclusions());
 
-		filterRegistrationBean.addInitParameter(WebStatFilter.PARAM_NAME_PRINCIPAL_SESSION_NAME,
-				statProperties.getPrincipalSessionName());
-		filterRegistrationBean.addInitParameter(WebStatFilter.PARAM_NAME_PRINCIPAL_COOKIE_NAME,
-				statProperties.getPrincipalCookieName());
-		filterRegistrationBean.addInitParameter(WebStatFilter.PARAM_NAME_REAL_IP_HEADER,
-				statProperties.getRealIpHeader());
+		if (StringUtils.isNotEmpty(statProperties.getPrincipalSessionName())) {
+			filterRegistrationBean.addInitParameter(WebStatFilter.PARAM_NAME_PRINCIPAL_SESSION_NAME,
+					statProperties.getPrincipalSessionName());
+		}
+		if (StringUtils.isNotEmpty(statProperties.getPrincipalCookieName())) {
+			filterRegistrationBean.addInitParameter(WebStatFilter.PARAM_NAME_PRINCIPAL_COOKIE_NAME,
+					statProperties.getPrincipalCookieName());
+		}
+		if (StringUtils.isNotEmpty(statProperties.getRealIpHeader())) {
+			filterRegistrationBean.addInitParameter(WebStatFilter.PARAM_NAME_REAL_IP_HEADER,
+					statProperties.getRealIpHeader());
+		}
 
 		return filterRegistrationBean;
 	}
