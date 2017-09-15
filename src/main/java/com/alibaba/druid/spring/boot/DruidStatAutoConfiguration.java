@@ -112,10 +112,6 @@ public class DruidStatAutoConfiguration {
 		}
 		filterRegistrationBean.addUrlPatterns(statProperties.getUrlPatterns());
 
-		// Session监控配置
-		if (StringUtils.isEmpty(statProperties.getExclusions())) {
-			
-		}
 		filterRegistrationBean.addInitParameter(WebStatFilter.PARAM_NAME_PROFILE_ENABLE,
 				statProperties.getProfileEnable().toString());
 		filterRegistrationBean.addInitParameter(WebStatFilter.PARAM_NAME_SESSION_STAT_ENABLE,
