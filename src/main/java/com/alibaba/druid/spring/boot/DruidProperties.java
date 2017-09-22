@@ -79,7 +79,8 @@ public class DruidProperties {
 	 * 开启Druid的监控统计功能，mergeStat代替stat表示sql合并,wall表示防御SQL注入攻击
 	 */
 	protected String filters = "mergeStat,wall,slf4j";
-
+	protected Boolean proxyFilter = false;
+	
 	protected Boolean useGlobalDataSourceStat;
 	protected Long timeBetweenLogStatsMillis;
 	protected Integer statSqlMaxSize;
@@ -287,6 +288,14 @@ public class DruidProperties {
 
 	public void setFilters(String filters) {
 		this.filters = filters;
+	}
+	
+	public Boolean getProxyFilter() {
+		return proxyFilter;
+	}
+
+	public void setProxyFilter(Boolean proxyFilter) {
+		this.proxyFilter = proxyFilter;
 	}
 
 	public Boolean getUseGlobalDataSourceStat() {

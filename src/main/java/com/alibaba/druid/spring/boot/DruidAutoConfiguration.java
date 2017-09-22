@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -157,7 +158,9 @@ public class DruidAutoConfiguration {
 		}
 		
 		//指定过滤器
-		dataSource.setProxyFilters(getProxyFilters(druidProperties));
+		if(BooleanUtils.isTrue(druidProperties.getProxyFilter())) {
+			dataSource.setProxyFilters(getProxyFilters(druidProperties));
+		}
 		
 		//额外的链接参数
 		dataSource.setConnectProperties(druidProperties.getConnectionProperties());
