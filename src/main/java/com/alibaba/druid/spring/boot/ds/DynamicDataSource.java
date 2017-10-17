@@ -101,4 +101,11 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 
 	}
 
+	public void removeTargetDataSource(String name) {
+
+		getTargetDataSources().remove(name);
+		Object lookupKey = resolveSpecifiedLookupKey(name);
+		getResolvedDataSources().remove(lookupKey);
+		
+	}
 }
