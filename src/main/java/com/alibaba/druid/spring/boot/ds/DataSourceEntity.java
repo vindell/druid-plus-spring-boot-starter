@@ -5,6 +5,13 @@ package com.alibaba.druid.spring.boot.ds;
 
 public class DataSourceEntity {
 
+	public DataSourceEntity(String name, String url, String username, String password) {
+		this.name = name;
+		this.url = url;
+		this.username = username;
+		this.password = password;
+	}
+	
 	/**
 	 * 数据库名称
 	 */
