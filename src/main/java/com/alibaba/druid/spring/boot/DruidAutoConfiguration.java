@@ -27,7 +27,7 @@ import com.alibaba.druid.filter.logging.LogFilter;
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot.ds.DataSourceContextHolder;
-import com.alibaba.druid.spring.boot.ds.DataSourceEntity;
+import com.alibaba.druid.spring.boot.ds.DynamicDataSourceSetting;
 import com.alibaba.druid.spring.boot.ds.DynamicDataSource;
 import com.alibaba.druid.wall.WallFilter;
 
@@ -111,24 +111,24 @@ public class DruidAutoConfiguration {
 	public DynamicDataSource dynamicDataSource(DataSourceProperties properties, DruidProperties druidProperties,
 			DruidDynamicProperties dynamicProperties,
 			@Qualifier(DataSourceContextHolder.DEFAULT_DATASOURCE) DruidDataSource druidDataSource,
-			@Autowired(required = false) @Qualifier("dataSourceList") List<DataSourceEntity> dataSourceList) {
+			@Autowired(required = false) @Qualifier("dynamicDataSourceList") List<DynamicDataSourceSetting> dynamicDataSourceList) {
 
 		Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
 		
 		//基于配置文件的动态数据源信息
 		if (!CollectionUtils.isEmpty(dynamicProperties.getDataSourceList())) {
-			for (DataSourceEntity dsEntity : dynamicProperties.getDataSourceList()) {
+			for (DynamicDataSourceSetting dsSetting : dynamicProperties.getDataSourceList()) {
 				// 动态创建Druid数据源
-				targetDataSources.put(dsEntity.getName(), this.createDataSource(properties, druidProperties,
-						dsEntity.getName(), dsEntity.getUrl(), dsEntity.getUsername(), dsEntity.getPassword()));
+				targetDataSources.put(dsSetting.getName(), this.createDataSource(properties, druidProperties,
+						dsSetting.getName(), dsSetting.getUrl(), dsSetting.getUsername(), dsSetting.getPassword()));
 			}
 		}
 		//基于对象注入的数据源信息
-		if (!CollectionUtils.isEmpty(dataSourceList)) {
-			for (DataSourceEntity dsEntity : dataSourceList) {
+		if (!CollectionUtils.isEmpty(dynamicDataSourceList)) {
+			for (DynamicDataSourceSetting dsSetting : dynamicDataSourceList) {
 				// 动态创建Druid数据源
-				targetDataSources.put(dsEntity.getName(), this.createDataSource(properties, druidProperties,
-						dsEntity.getName(), dsEntity.getUrl(), dsEntity.getUsername(), dsEntity.getPassword()));
+				targetDataSources.put(dsSetting.getName(), this.createDataSource(properties, druidProperties,
+						dsSetting.getName(), dsSetting.getUrl(), dsSetting.getUsername(), dsSetting.getPassword()));
 			}
 		}
 
@@ -161,7 +161,8 @@ public class DruidAutoConfiguration {
 
 		// druid 连接池参数
 		dataSource.configFromPropety(druidProperties.toProperties());
-
+		//DruidDataSourceFactory.config(dataSource, druidProperties);
+		
 		// 配置初始化大小、最小、最大
 
 		// minIdle: 最小空闲连接数量

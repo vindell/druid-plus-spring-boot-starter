@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import com.alibaba.druid.spring.boot.ds.DataSourceEntity;
+import com.alibaba.druid.spring.boot.ds.DynamicDataSourceSetting;
 
 @ConfigurationProperties(DruidDynamicProperties.PREFIX)
 public class DruidDynamicProperties {
@@ -20,7 +20,7 @@ public class DruidDynamicProperties {
 	 
 	/** 动态数据源连接信息 */
 	@NestedConfigurationProperty
-	protected List<DataSourceEntity> dataSourceList;
+	protected List<DynamicDataSourceSetting> dataSourceList;
 
 	public Boolean getEnabled() {
 		return enabled;
@@ -30,11 +30,11 @@ public class DruidDynamicProperties {
 		this.enabled = enabled;
 	}
 
-	public List<DataSourceEntity> getDataSourceList() {
+	public List<DynamicDataSourceSetting> getDataSourceList() {
 		return dataSourceList;
 	}
 
-	public void setDataSourceList(List<DataSourceEntity> dataSourceList) {
+	public void setDataSourceList(List<DynamicDataSourceSetting> dataSourceList) {
 		this.dataSourceList = dataSourceList;
 	}
 
