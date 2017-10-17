@@ -3,6 +3,7 @@
  */
 package com.alibaba.druid.spring.boot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -20,7 +21,7 @@ public class DruidDynamicProperties {
 	 
 	/** 动态数据源连接信息 */
 	@NestedConfigurationProperty
-	protected List<DynamicDataSourceSetting> dataSourceList;
+	protected List<DynamicDataSourceSetting> dataSourceList = new ArrayList<DynamicDataSourceSetting>();
 
 	public Boolean getEnabled() {
 		return enabled;
