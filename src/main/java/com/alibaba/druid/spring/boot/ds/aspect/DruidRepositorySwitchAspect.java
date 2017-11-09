@@ -25,7 +25,7 @@ public class DruidRepositorySwitchAspect {
 	
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
-	@Pointcut("@annotation(com.zfsoft.boot.druid.annotation.DruidRepository) and @annotation(repository)")
+	@Pointcut("@annotation(com.alibaba.druid.spring.boot.ds.annotation.DruidRepository) and @annotation(repository)")
 	public void switchRepository() {
 	}
 
