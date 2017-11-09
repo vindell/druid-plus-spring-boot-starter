@@ -3,13 +3,12 @@ package com.alibaba.druid.spring.boot.ds.aspect;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.druid.spring.boot.ds.DataSourceContextHolder;
-import com.alibaba.druid.spring.boot.ds.annotation.DruidRepository;
+import com.alibaba.druid.spring.boot.ds.annotation.SwitchRepository;
 
 /**
  * 
@@ -25,12 +24,9 @@ public class DruidRepositorySwitchAspect {
 	
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
-	@Pointcut("@annotation(com.alibaba.druid.spring.boot.ds.annotation.DruidRepository) and @annotation(repository)")
-	public void switchRepository() {
-	}
-
-	@Around("switchRepository()")
-	public Object around(ProceedingJoinPoint joinPoint, DruidRepository repository) throws Throwable {
+	//环绕通知   
+	@Around("@annotation(com.alibaba.druid.spring.boot.ds.annotation.SwitchRepository) and @annotation(repository)")
+	public Object around(ProceedingJoinPoint joinPoint, SwitchRepository repository) throws Throwable {
 		String oldRepository = DataSourceContextHolder.getDatabaseName();
     	try {
     		DataSourceContextHolder.setDatabaseName(repository.value());
