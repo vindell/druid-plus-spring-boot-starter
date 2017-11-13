@@ -23,8 +23,7 @@ import com.alibaba.druid.spring.boot.util.DruidDataSourceUtils;
 
 @Configuration
 @ConditionalOnClass({ DruidDataSource.class })
-@ConditionalOnProperty(name = {
-		"spring.datasource.type" }, havingValue = "com.alibaba.druid.pool.DruidDataSource", matchIfMissing = true)
+@ConditionalOnProperty(name = { "spring.datasource.druid.enabled" }, havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties({ DruidDynamicProperties.class })
 public class DruidDynamicAutoConfiguration {
 

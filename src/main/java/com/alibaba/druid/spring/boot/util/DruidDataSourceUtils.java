@@ -20,10 +20,10 @@ import com.alibaba.druid.wall.WallFilter;
 
 public class DruidDataSourceUtils {
 
-	public static DruidDataSource createDataSource(DataSourceProperties properties, DruidProperties druidProperties,
+	public static <T extends DataSource> DruidDataSource createDataSource(DataSourceProperties properties, DruidProperties druidProperties,
 			String name, String url, String username, String password) {
 		// 创建 DruidDataSource 数据源对象
-		DruidDataSource dataSource = createDataSource(properties, DruidDataSource.class);
+		DruidDataSource dataSource = createDataSource(properties, properties.getType());
 
 		// 配置这个属性的意义在于，如果存在多个数据源，监控的时候可以通过名字来区分开来。如果没有配置，将会生成一个名字，格式是：”DataSource-” +
 		// System.identityHashCode(this)

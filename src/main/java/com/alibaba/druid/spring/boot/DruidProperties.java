@@ -15,6 +15,11 @@ public class DruidProperties {
 
 	public static final String PREFIX = "spring.datasource.druid";
 	
+	/**
+	 * Enable Druid.
+	 */
+	private boolean enabled = false;
+	
 	/** 基本属性 url、user、password */
 	
 	protected String driverClassName;
@@ -105,6 +110,14 @@ public class DruidProperties {
 
 	@NestedConfigurationProperty
 	protected Slf4jLogFilter logFilter;
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 
 	public Boolean getFailFast() {
 		return failFast;
