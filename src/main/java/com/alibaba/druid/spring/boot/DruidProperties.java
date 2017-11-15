@@ -2,6 +2,7 @@ package com.alibaba.druid.spring.boot;
 
 import java.util.Properties;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -102,14 +103,15 @@ public class DruidProperties {
 	protected Boolean useUnfairLock;
 	protected Boolean killWhenSocketReadTimeout;
 	
+	//https://github.com/alibaba/druid/wiki/%E9%85%8D%E7%BD%AE-wallfilter
 	@NestedConfigurationProperty
-	protected WallFilter wallFilter;
+	protected WallFilter wallFilter = new WallFilter();
 
 	@NestedConfigurationProperty
-	protected StatFilter statFilter;
+	protected StatFilter statFilter = new StatFilter();
 
 	@NestedConfigurationProperty
-	protected Slf4jLogFilter logFilter;
+	protected Slf4jLogFilter logFilter = new Slf4jLogFilter();
 
 	public boolean isEnabled() {
 		return enabled;
@@ -448,7 +450,10 @@ public class DruidProperties {
 		notNullAdd(properties, "testOnBorrow", this.testOnBorrow);
 		notNullAdd(properties, "validationQuery", this.validationQuery);
 		notNullAdd(properties, "useGlobalDataSourceStat", this.useGlobalDataSourceStat);
-		notNullAdd(properties, "filters", this.filters);
+		// 指定过滤器
+		if (BooleanUtils.isFalse(getProxyFilter())) {
+			notNullAdd(properties, "filters", this.filters);
+		}
 		notNullAdd(properties, "timeBetweenLogStatsMillis", this.timeBetweenLogStatsMillis);
 		notNullAdd(properties, "stat.sql.MaxSize", this.statSqlMaxSize);
 		notNullAdd(properties, "clearFiltersEnable", this.clearFiltersEnable);

@@ -93,15 +93,14 @@ public class DruidDataSourceUtils {
 		 * #日志用的filter:log4j #防御SQL注入的filter:wall
 		 */
 		try {
-			// 开启Druid的监控统计功能
-			dataSource.setFilters(druidProperties.getFilters());
+			// 指定过滤器
+			if (BooleanUtils.isTrue(druidProperties.getProxyFilter())) {
+				dataSource.setProxyFilters(getProxyFilters(druidProperties));
+			} else {
+				dataSource.setFilters(druidProperties.getFilters());
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-
-		// 指定过滤器
-		if (BooleanUtils.isTrue(druidProperties.getProxyFilter())) {
-			dataSource.setProxyFilters(getProxyFilters(druidProperties));
 		}
 
 		// 额外的链接参数
