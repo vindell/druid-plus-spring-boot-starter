@@ -2,8 +2,7 @@ package com.alibaba.druid.spring.boot.ds;
 
 public class DataSourceContextHolder {
 
-	public static final String DEFAULT_DATASOURCE = "druidDataSource";
-	public static final String DYNAMIC_DATASOURCE = "dynamicDataSource";
+	public static final String DEFAULT_DATASOURCE = "defaultDataSource";
 	
 	private static final ThreadLocal<String> CONTEXT_HOLDER = new ThreadLocal<String>() {
 		
