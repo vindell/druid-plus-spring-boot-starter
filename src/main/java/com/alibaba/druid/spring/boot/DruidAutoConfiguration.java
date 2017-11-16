@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import com.alibaba.druid.pool.DruidDataSource;
@@ -40,7 +41,7 @@ public class DruidAutoConfiguration {
 	 */
 	@Bean(DataSourceContextHolder.DEFAULT_DATASOURCE)
 	@ConditionalOnMissingBean(AbstractRoutingDataSource.class)
-	@ConditionalOnProperty(prefix = DruidDynamicProperties.PREFIX, value = "enabled", havingValue = "false", matchIfMissing = true)
+	@Primary
 	public DruidDataSource druidDataSource(DataSourceProperties properties, DruidProperties druidProperties) {
 		return DruidDataSourceUtils.createDataSource(properties, druidProperties, druidProperties.getName(), properties.determineUrl(),
 				properties.determineUsername(), properties.determinePassword());
