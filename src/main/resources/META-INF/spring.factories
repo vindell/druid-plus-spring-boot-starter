@@ -2,4 +2,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.alibaba.druid.spring.boot.DruidAutoConfiguration,\
 com.alibaba.druid.spring.boot.DruidDynamicAutoConfiguration,\
-com.alibaba.druid.spring.boot.DruidStatAutoConfiguration
+com.alibaba.druid.spring.boot.DruidStatAutoConfiguration,\
+com.alibaba.druid.spring.boot.DruidSourceCountAutoConfiguration
