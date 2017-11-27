@@ -1,18 +1,20 @@
-package com.alibaba.druid.spring.boot.ds;
+package com.alibaba.druid.spring.boot.util;
 
 import java.sql.DriverManager;
+
+import com.alibaba.druid.spring.boot.ds.JDBCDriverEnum;
 
 public class JDBCUtils {
 
 	/**
 	 * 
 	 * @description	： TODO
-	 * @author 		： 万大龙（743）
-	 * @date 		：2017年10月12日 上午11:23:44
+	 * @author 		： <a href="https://github.com/vindell">vindell</a>
+	 * @date 		：2017年11月27日 下午8:49:25
 	 * @param className
-	 * @param URL  
-	 * @param Username 用户名
-	 * @param Password 密码
+	 * @param URL
+	 * @param Username
+	 * @param Password
 	 * @return
 	 */
 	public static boolean testConnection(String className,String URL,String Username,String Password) {
