@@ -10,13 +10,15 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
+	<groupId>com.github.vindell</groupId>
 	<artifactId>spring-boot-starter-druid</artifactId>
+	<version>1.5.9-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	
+
 	<name>spring-boot-starter-druid</name>
-	<url></url>
+	<url>https://github.com/vindell/spring-boot-starter-druid</url>
 	<description>starter for druid</description>
-	
+
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
@@ -24,6 +26,12 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+
+	<scm>
+		<url>https://github.com/vindell/spring-boot-starter-druid</url>
+		<connection>scm:git:git://github.com/vindell/spring-boot-starter-druid.git</connection>
+		<developerConnection>scm:git:git@github.com/vindell/spring-boot-starter-druid.git</developerConnection>
+	</scm>
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -325,6 +333,4 @@
 		</plugins>
 	</build>
 
-
-	<groupId>com.github.vindell</groupId>
 </project>
