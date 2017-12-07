@@ -39,7 +39,6 @@
 		<java.version>1.8</java.version>
 		<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
 		<druid.version>1.1.5</druid.version>
-		<sharding-jdbc.version>2.0.0.M3</sharding-jdbc.version>
 	</properties>
 	
 	<dependencies>
@@ -111,43 +110,6 @@
 			<artifactId>druid</artifactId>
 			<version>${druid.version}</version>
 		</dependency>
-		
-		<!-- http://mvnrepository.com/artifact/io.shardingjdbc -->
-		<dependency>
-		    <groupId>io.shardingjdbc</groupId>
-		    <artifactId>sharding-jdbc-core</artifactId>
-		    <version>${sharding-jdbc.version}</version>
-		    <scope>provided</scope>
-		</dependency>
-		<dependency>
-		    <groupId>io.shardingjdbc</groupId>
-		    <artifactId>sharding-jdbc-transaction</artifactId>
-		    <version>${sharding-jdbc.version}</version>
-		    <scope>provided</scope>
-		</dependency>
-		<dependency>
-		    <groupId>io.shardingjdbc</groupId>
-		    <artifactId>sharding-jdbc-transaction-storage</artifactId>
-		    <version>${sharding-jdbc.version}</version>
-		    <scope>provided</scope>
-		</dependency>
-		<dependency>
-		    <groupId>io.shardingjdbc</groupId>
-		    <artifactId>sharding-jdbc-orchestration</artifactId>
-		    <version>${sharding-jdbc.version}</version>
-		    <scope>provided</scope>
-		</dependency>
-		
-		<!-- <dependency>
-		    <groupId>io.shardingjdbc</groupId>
-		    <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
-		    <version>${sharding-jdbc.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>io.shardingjdbc</groupId>
-		    <artifactId>sharding-jdbc-orchestration-spring-boot-starter</artifactId>
-		    <version>${sharding-jdbc.version}</version>
-		</dependency> -->
 		
 		<dependency>
 			<groupId>org.apache.commons</groupId>
