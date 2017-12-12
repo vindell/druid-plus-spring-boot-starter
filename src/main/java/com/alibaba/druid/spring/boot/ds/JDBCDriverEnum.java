@@ -13,56 +13,58 @@ public enum JDBCDriverEnum {
 	/**
 	 * DB2数据库驱动和链接
 	 */
-	DB2("DB2","DB2 数据库","com.ibm.db2.jcc.DB2Driver", "jdbc:db2://{ip}:{port}/{database}"),
+	DB2("DB2","DB2 数据库","com.ibm.db2.jcc.DB2Driver", "jdbc:db2://{ip}:{port}/{database}", false),
 	/**
 	 * 内嵌模式Derby数据库驱动和链接
 	 */
-	DERBY("Embedded-Derby","内嵌模式Derby 数据库","org.apache.derby.jdbc.EmbeddedDriver", "jdbc:derby:DerByDB;create=true"),
+	DERBY("Embedded-Derby","内嵌模式Derby 数据库","org.apache.derby.jdbc.EmbeddedDriver", "jdbc:derby:DerByDB;create=true", false),
 	/**
 	 * 网络模式Derby数据库驱动和链接
 	 */
-	DERBY_CLIENT("Network-Server-Derby", "网络模式Derby 数据库","org.apache.derby.jdbc.ClientDriver", "jdbc:derby://{ip}:{port}/{database};create=true"),
+	DERBY_CLIENT("Network-Server-Derby", "网络模式Derby 数据库","org.apache.derby.jdbc.ClientDriver", "jdbc:derby://{ip}:{port}/{database};create=true", false),
 	/**
 	 * Hsqldb 数据库驱动和链接
 	 */
-	HSQLDB("Hsqldb","Hsqldb 数据库","org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:sample"), 
+	HSQLDB("Hsqldb","Hsqldb 数据库","org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:sample", false), 
 	/**
 	 * Mariadb 数据库驱动和链接
 	 */
-	MARIADB("Mariadb","Mariadb 数据库","org.mariadb.jdbc.Driver", "jdbc:mariadb://localhost:3306/sample"), 
+	MARIADB("Mariadb","Mariadb 数据库","org.mariadb.jdbc.Driver", "jdbc:mariadb://localhost:3306/sample", true), 
 	/**
 	 * MySQL数据库驱动和链接
 	 */
-	MYSQL("MySQL","MySQL 数据库","com.mysql.cj.jdbc.Driver", "jdbc:mysql://{ip}:{port}/{database}"), 
+	MYSQL("MySQL","MySQL 数据库","com.mysql.cj.jdbc.Driver", "jdbc:mysql://{ip}:{port}/{database}", true), 
 	/**
 	 * Oracle数据库驱动和链接
 	 */
-	ORACLE("Oracle","Oracle 10g、11g 数据库","oracle.jdbc.driver.OracleDriver","jdbc:oracle:thin:@{ip}:{port}:{database}"), 
-	ORACLE12C("Oracle12c","Oracle12c 数据库","oracle.jdbc.driver.OracleDriver","jdbc:oracle:thin:@{ip}:{port}/{database}"),
+	ORACLE("Oracle","Oracle 10g、11g 数据库","oracle.jdbc.OracleDriver","jdbc:oracle:thin:@{ip}:{port}:{database}", true), 
+	ORACLE12C("Oracle12c","Oracle12c 数据库","oracle.jdbc.OracleDriver","jdbc:oracle:thin:@{ip}:{port}/{database}", true),
 	/**
 	 * PostgreSQL 数据库驱动和链接
 	 */
-	POSTGRESQL("PostgreSQL","PostgreSQL 数据库","org.postgresql.Driver", "jdbc:postgresql://{ip}:{port}/{database}"), 
+	POSTGRESQL("PostgreSQL","PostgreSQL 数据库","org.postgresql.Driver", "jdbc:postgresql://{ip}:{port}/{database}", true), 
 	/**
 	 * SqlServer2000 数据库驱动和链接
 	 */
-	SQLSERVER_2000("SqlServer2000","SqlServer2000 数据库","com.microsoft.jdbc.sqlserver.SQLServerDriver","jdbc:microsoft:sqlserver://{ip}:{port};DatabaseName={database}"),
+	SQLSERVER_2000("SqlServer2000","SqlServer2000 数据库","com.microsoft.jdbc.sqlserver.SQLServerDriver","jdbc:microsoft:sqlserver://{ip}:{port};DatabaseName={database}", true),
 	/**
 	 * SqlServer2005 数据库驱动和链接
 	 */
-	SQLSERVER_2005("SqlServer2005","SqlServer2005 数据库","com.microsoft.sqlserver.jdbc.SQLServerDriver","jdbc:sqlserver://{ip}:{port};DatabaseName={database}");
+	SQLSERVER_2005("SqlServer2005","SqlServer2005 数据库","com.microsoft.sqlserver.jdbc.SQLServerDriver","jdbc:sqlserver://{ip}:{port};DatabaseName={database}", true);
 
 	
 	private String key;
 	private String desc;
+	private boolean standlone;
 	private String className;
 	private String url;
 
-	private JDBCDriverEnum(String key, String desc, String className, String url) {
+	private JDBCDriverEnum(String key, String desc, String className, String url, boolean standlone) {
 		this.key = key;
 		this.desc = desc;
 		this.className = className;
 		this.url = url;
+		this.standlone = standlone;
 	}
 
 	public String getKey() {
@@ -76,6 +78,11 @@ public enum JDBCDriverEnum {
 	public String getDriverClass() {
 		return className;
 	}
+	
+	public boolean isStandlone() {
+		return standlone;
+	}
+	
 	
 	public String getDriverURL(String ip,String port,String dbname) {
 		return url.replace("{ip}", ip).replace("{port}", port).replace("{database}", dbname);
@@ -102,7 +109,9 @@ public enum JDBCDriverEnum {
 	public static List<Map<String, String>> driverList() {
 		List<Map<String, String>> driverList = new LinkedList<Map<String, String>>();
 		for (JDBCDriverEnum driverEnum : JDBCDriverEnum.values()) {
-			driverList.add(driverEnum.toMap());
+			if( driverEnum.isStandlone()) {
+				driverList.add(driverEnum.toMap());
+			}
 		}
 		return driverList;
 	}

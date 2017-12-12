@@ -1,9 +1,11 @@
 package com.alibaba.druid.spring.boot;
 
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +30,7 @@ import com.alibaba.druid.spring.boot.util.DruidDataSourceUtils;
 @ConditionalOnProperty(name = { "spring.datasource.druid.enabled" }, havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties({ DruidProperties.class})
 @AutoConfigureAfter(DruidDynamicAutoConfiguration.class)
+@AutoConfigureBefore(DataSourceAutoConfiguration.class)
 public class DruidAutoConfiguration {
 
 	/**
