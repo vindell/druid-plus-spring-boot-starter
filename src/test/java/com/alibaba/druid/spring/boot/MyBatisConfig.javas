@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.zfsoft.cloud.demo;
+package net.jeebiz.cloud.demo;
 
 import java.util.Properties;
 
@@ -53,7 +53,7 @@ public class MyBatisConfig implements TransactionManagementConfigurer {
     public SqlSessionFactory sqlSessionFactoryBean() {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
-        bean.setTypeAliasesPackage("com.zfsoft.boot.apimgr.entity");
+        bean.setTypeAliasesPackage("net.jeebiz.boot.apimgr.entity");
 
         //分页插件
         //PageHelper pageHelper = new PageHelper();
