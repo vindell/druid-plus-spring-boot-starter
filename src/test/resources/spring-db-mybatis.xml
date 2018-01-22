@@ -167,7 +167,7 @@
 	<!-- 使用接口扫描代理Dao接口 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
-       <property name="basePackage" value="com.jeefw.**.interfaces" />
+       <property name="basePackage" value="com.jeebiz.**.interfaces" />
     </bean>
 
 </beans>
