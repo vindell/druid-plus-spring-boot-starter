@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -25,8 +26,13 @@ import com.alibaba.druid.spring.boot.util.DruidDataSourceUtils;
 @ConditionalOnClass({ DruidDataSource.class })
 @ConditionalOnProperty(prefix = DruidDynamicProperties.PREFIX, value = "enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties({ DruidDynamicProperties.class })
+@AutoConfigureBefore(DruidAutoConfiguration.class)
 public class DruidDynamicAutoConfiguration {
 
+	@Autowired(required = false) 
+	@Qualifier("targetDataSources") 
+	protected Map<Object, Object> targetDataSources;
+	
 	@Bean("targetDataSources")
 	public Map<Object, Object> targetDataSources() {
 		return new HashMap<Object, Object>();
@@ -39,16 +45,11 @@ public class DruidDynamicAutoConfiguration {
 	@Bean(DataSourceContextHolder.DEFAULT_DATASOURCE)
 	@Primary
 	public DynamicDataSource dynamicDataSource(DataSourceProperties properties, DruidProperties druidProperties,
-			DruidDynamicProperties dynamicProperties,
-			@Autowired(required = false) @Qualifier("targetDataSources") Map<Object, Object> targetDataSources) {
-
-		if(targetDataSources == null) {
-			targetDataSources = new HashMap<Object, Object>();
-		}
+			DruidDynamicProperties dynamicProperties) {
 		
 		//基于配置文件的动态数据源信息
-		if (!CollectionUtils.isEmpty(dynamicProperties.getDataSourceList())) {
-			for (DynamicDataSourceSetting dsSetting : dynamicProperties.getDataSourceList()) {
+		if (!CollectionUtils.isEmpty(dynamicProperties.getDataSources())) {
+			for (DynamicDataSourceSetting dsSetting : dynamicProperties.getDataSources()) {
 				// 动态创建Druid数据源
 				targetDataSources.put(dsSetting.getName(), DruidDataSourceUtils.createDataSource(properties, druidProperties,
 						dsSetting.getName(), dsSetting.getUrl(), dsSetting.getUsername(), dsSetting.getPassword()));

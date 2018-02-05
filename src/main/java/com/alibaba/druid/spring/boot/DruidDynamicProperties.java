@@ -18,7 +18,7 @@ public class DruidDynamicProperties {
 	 
 	/** 动态数据源连接信息 */
 	@NestedConfigurationProperty
-	protected List<DynamicDataSourceSetting> dataSourceList = new ArrayList<DynamicDataSourceSetting>();
+	protected List<DynamicDataSourceSetting> dataSources = new ArrayList<DynamicDataSourceSetting>();
 
 	public Boolean getEnabled() {
 		return enabled;
@@ -28,12 +28,14 @@ public class DruidDynamicProperties {
 		this.enabled = enabled;
 	}
 
-	public List<DynamicDataSourceSetting> getDataSourceList() {
-		return dataSourceList;
+	public List<DynamicDataSourceSetting> getDataSources() {
+		return dataSources;
 	}
 
-	public void setDataSourceList(List<DynamicDataSourceSetting> dataSourceList) {
-		this.dataSourceList = dataSourceList;
+	public void setDataSources(List<DynamicDataSourceSetting> dataSources) {
+		this.dataSources = dataSources;
 	}
+
+	
 
 }

@@ -9,6 +9,7 @@
 2. 基于DruidDataSource的动态数据源实现
 3. 基于AOP+注解实现数据源按需切换
 4. DruidDataSource数据源监控逻辑
+5. https://github.com/alibaba/druid/tree/master/druid-spring-boot-starter
 
 
 ### Maven

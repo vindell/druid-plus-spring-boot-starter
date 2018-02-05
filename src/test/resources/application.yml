@@ -78,9 +78,9 @@ spring:
           select-union-check: false
           # 是否允许执行锁定表操作
           lock-table-allow: true
-      #Druid监控
-      stat:
+      dynamic:
         enabled: true
+        
       
     
         
