@@ -25,9 +25,9 @@ import com.alibaba.druid.spring.boot.util.DruidDataSourceUtils;
  * @version V1.0
  */
 @Configuration
-@ConditionalOnClass({ DruidDataSource.class })
-@ConditionalOnProperty(name = { "spring.datasource.druid.enabled" }, havingValue = "true", matchIfMissing = true)
-@EnableConfigurationProperties({ DruidProperties.class})
+@ConditionalOnClass(com.alibaba.druid.pool.DruidDataSource.class)
+@ConditionalOnProperty(name = "spring.datasource.druid.enabled" , havingValue = "true", matchIfMissing = true)
+@EnableConfigurationProperties({ DruidProperties.class, DataSourceProperties.class})
 @AutoConfigureBefore(DruidDataSourceAutoConfigure.class)
 public class DruidAutoConfiguration {
 	

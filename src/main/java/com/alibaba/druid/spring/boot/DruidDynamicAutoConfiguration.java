@@ -23,9 +23,9 @@ import com.alibaba.druid.spring.boot.util.DruidDataSourceUtils;
 
 
 @Configuration
-@ConditionalOnClass({ DruidDataSource.class })
-@ConditionalOnProperty(prefix = DruidDynamicProperties.PREFIX, value = "enabled", havingValue = "true", matchIfMissing = true)
-@EnableConfigurationProperties({ DruidDynamicProperties.class })
+@ConditionalOnClass(com.alibaba.druid.pool.DruidDataSource.class)
+@ConditionalOnProperty(name = "spring.datasource.druid.enabled" , havingValue = "true", matchIfMissing = true)
+@EnableConfigurationProperties({ DruidDynamicProperties.class, DataSourceProperties.class })
 @AutoConfigureBefore(DruidAutoConfiguration.class)
 public class DruidDynamicAutoConfiguration {
 
@@ -34,6 +34,7 @@ public class DruidDynamicAutoConfiguration {
 	protected Map<Object, Object> targetDataSources;
 	
 	@Bean("targetDataSources")
+	@ConditionalOnProperty(prefix = DruidDynamicProperties.PREFIX, value = "enabled", havingValue = "true", matchIfMissing = true)
 	public Map<Object, Object> targetDataSources() {
 		return new HashMap<Object, Object>();
 	}
@@ -43,6 +44,7 @@ public class DruidDynamicAutoConfiguration {
 	 * @Qualifier 根据名称进行注入，通常是在具有相同的多个类型的实例的一个注入（例如有多个DataSource类型的实例）
 	 */
 	@Bean(DataSourceContextHolder.DEFAULT_DATASOURCE)
+	@ConditionalOnProperty(prefix = DruidDynamicProperties.PREFIX, value = "enabled", havingValue = "true", matchIfMissing = true)
 	@Primary
 	public DynamicDataSource dynamicDataSource(DataSourceProperties properties, DruidProperties druidProperties,
 			DruidDynamicProperties dynamicProperties) {
