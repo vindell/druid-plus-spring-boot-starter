@@ -12,7 +12,7 @@ server:
 spring:  
   redis:
     database: 1
-    host: 121.43.110.87
+    host: 127.0.0.1
     pool:
       max-active: 20
   datasource: 
