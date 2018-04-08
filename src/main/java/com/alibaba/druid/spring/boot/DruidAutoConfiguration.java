@@ -17,12 +17,8 @@ import com.alibaba.druid.spring.boot.ds.DataSourceContextHolder;
 import com.alibaba.druid.spring.boot.util.DruidDataSourceUtils;
 
 /**
- * 
- * @className ： DruidAutoConfiguration
- * @description ： 创建DruidAutoConfiguration配置类
- * @author ： <a href="https://github.com/vindell">vindell</a>
- * @date ： 2017年8月19日 下午4:39:23
- * @version V1.0
+ * DruidAutoConfiguration配置类
+ * @author 		： <a href="https://github.com/vindell">vindell</a>
  */
 @Configuration
 @ConditionalOnClass(com.alibaba.druid.pool.DruidDataSource.class)

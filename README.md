@@ -1,4 +1,4 @@
-# spring-boot-starter-druid
+# spring-boot-starter-druid-plus
 
 
 ### 说明
@@ -9,15 +9,15 @@
 2. 基于DruidDataSource的动态数据源实现
 3. 基于AOP+注解实现数据源按需切换
 4. DruidDataSource数据源监控逻辑
-5. https://github.com/alibaba/druid/tree/master/druid-spring-boot-starter
+5. 基于[druid-spring-boot-starter](https://github.com/alibaba/druid/tree/master/druid-spring-boot-starter) 的扩展
 
 
 ### Maven
 
 ``` xml
 <dependency>
-	<groupId>${project.groupId}</groupId>
-	<artifactId>spring-boot-starter-druid</artifactId>
+	<groupId>com.github.vindell</groupId>
+	<artifactId>spring-boot-starter-druid-plus</artifactId>
 	<version>${project.version}</version>
 </dependency>
 ```

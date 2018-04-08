@@ -11,12 +11,8 @@ import com.alibaba.druid.spring.boot.ds.DataSourceContextHolder;
 import com.alibaba.druid.spring.boot.ds.annotation.SwitchRepository;
 
 /**
- * 
- * @className	： DruidRepositorySwitchAspect
- * @description	： 数据源自动切换切面
+ * 数据源自动切换切面
  * @author 		： <a href="https://github.com/vindell">vindell</a>
- * @date		： 2017年11月9日 下午12:52:31
- * @version 	V1.0
  */
 @Aspect
 @Component
