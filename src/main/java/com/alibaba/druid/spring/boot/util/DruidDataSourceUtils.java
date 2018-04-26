@@ -17,27 +17,34 @@ import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot.DruidProperties;
 import com.alibaba.druid.wall.WallFilter;
+import com.zaxxer.hikari.HikariDataSource;
 
 public class DruidDataSourceUtils {
 
 	public static <T extends DataSource> DruidDataSource createDataSource(DataSourceProperties properties, DruidProperties druidProperties,
-			String name, String url, String username, String password) {
+			String name, String jdbcUrl, String username, String password) {
+		
+		DataSourceProperties tmProperties = new DataSourceProperties();
+		
+		tmProperties.setName(properties.getName());
+		tmProperties.setType(HikariDataSource.class);
+		// 这一项可配可不配，如果不配置druid会根据url自动识别dbType，然后选择相应的driverClassName
+		tmProperties.setDriverClassName(properties.determineDriverClassName());
+		// jdbcUrl: 连接数据库的url
+		tmProperties.setUrl(jdbcUrl);
+		// username: 连接数据库的用户名
+		tmProperties.setUsername(username);
+		// password: 连接数据库的密码
+		tmProperties.setPassword(password);
+		
 		// 创建 DruidDataSource 数据源对象
-		DruidDataSource dataSource = createDataSource(properties, properties.getType());
+		DruidDataSource dataSource = createDataSource(tmProperties, tmProperties.getType());
 
 		// 配置这个属性的意义在于，如果存在多个数据源，监控的时候可以通过名字来区分开来。如果没有配置，将会生成一个名字，格式是：”DataSource-” +
 		// System.identityHashCode(this)
 		if (StringUtils.isNotEmpty(name)) {
 			dataSource.setName(name);
 		}
-		// 这一项可配可不配，如果不配置druid会根据url自动识别dbType，然后选择相应的driverClassName
-		dataSource.setDriverClassName(properties.determineDriverClassName());
-		// jdbcUrl: 连接数据库的url
-		dataSource.setUrl(url);
-		// username: 连接数据库的用户名
-		dataSource.setUsername(username);
-		// password: 连接数据库的密码
-		dataSource.setPassword(password);
 
 		// druid 连接池参数
 		dataSource.configFromPropety(druidProperties.toProperties());
