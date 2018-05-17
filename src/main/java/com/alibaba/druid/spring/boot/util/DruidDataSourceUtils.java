@@ -17,7 +17,6 @@ import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot.DruidProperties;
 import com.alibaba.druid.wall.WallFilter;
-import com.zaxxer.hikari.HikariDataSource;
 
 public class DruidDataSourceUtils {
 
@@ -27,7 +26,7 @@ public class DruidDataSourceUtils {
 		DataSourceProperties tmProperties = new DataSourceProperties();
 		
 		tmProperties.setName(properties.getName());
-		tmProperties.setType(HikariDataSource.class);
+		tmProperties.setType(properties.getType());
 		// 这一项可配可不配，如果不配置druid会根据url自动识别dbType，然后选择相应的driverClassName
 		tmProperties.setDriverClassName(properties.determineDriverClassName());
 		// jdbcUrl: 连接数据库的url
