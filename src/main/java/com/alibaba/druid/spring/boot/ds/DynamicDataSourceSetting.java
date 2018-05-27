@@ -16,21 +16,6 @@ public class DynamicDataSourceSetting {
 	/** password: 连接数据库的密码 */
 	protected String password;
 
-	public DynamicDataSourceSetting(String name, String url, String username, String password) {
-		this.name = name;
-		this.url = url;
-		this.username = username;
-		this.password = password;
-	}
-
-	public DynamicDataSourceSetting(String driverClassName, String name, String url, String username, String password) {
-		this.driverClassName = driverClassName;
-		this.name = name;
-		this.url = url;
-		this.username = username;
-		this.password = password;
-	}
-
 	public String getDriverClassName() {
 		return driverClassName;
 	}

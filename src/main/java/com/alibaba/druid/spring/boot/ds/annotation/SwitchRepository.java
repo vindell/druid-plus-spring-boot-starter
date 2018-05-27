@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.alibaba.druid.spring.boot.ds.DataSourceContextHolder;
+import com.alibaba.druid.spring.boot.ds.DynamicDataSourceContextHolder;
 
 /**
  * 用于方法注释；是否切换数据源及切换的数据源名称
@@ -22,6 +22,6 @@ public @interface SwitchRepository {
 	/**
 	 * 数据源名称
 	 */
-	public String value() default DataSourceContextHolder.DEFAULT_DATASOURCE;
+	public String value() default DynamicDataSourceContextHolder.MASTER_DATASOURCE;
 	
 }

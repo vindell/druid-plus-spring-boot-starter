@@ -13,8 +13,6 @@ spring:
   redis:
     database: 1
     host: 127.0.0.1
-    pool:
-      max-active: 20
   datasource: 
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://IP:3306/dbName?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=UTF-8
@@ -78,9 +76,6 @@ spring:
           select-union-check: false
           # 是否允许执行锁定表操作
           lock-table-allow: true
-      dynamic:
-        enabled: true
-        
-      
-    
+      dynamic: true
+                
         

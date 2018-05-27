@@ -17,6 +17,7 @@ import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot.DruidProperties;
 import com.alibaba.druid.wall.WallFilter;
+import com.zaxxer.hikari.HikariDataSource;
 
 public class DruidDataSourceUtils {
 
@@ -26,7 +27,7 @@ public class DruidDataSourceUtils {
 		DataSourceProperties tmProperties = new DataSourceProperties();
 		
 		tmProperties.setName(properties.getName());
-		tmProperties.setType(properties.getType());
+		tmProperties.setType(HikariDataSource.class);
 		// 这一项可配可不配，如果不配置druid会根据url自动识别dbType，然后选择相应的driverClassName
 		tmProperties.setDriverClassName(properties.determineDriverClassName());
 		// jdbcUrl: 连接数据库的url
@@ -65,32 +66,32 @@ public class DruidDataSourceUtils {
 		// 配置一个连接在池中最小生存的时间，单位是毫秒
 		dataSource.setMinEvictableIdleTimeMillis(druidProperties.getMinEvictableIdleTimeMillis());
 		// 超过时间限制是否回收
-		dataSource.setRemoveAbandoned(druidProperties.getRemoveAbandoned());
+		dataSource.setRemoveAbandoned(druidProperties.isRemoveAbandoned());
 		// 超过时间限制多长，单位是毫秒
 		dataSource.setRemoveAbandonedTimeoutMillis(druidProperties.getRemoveAbandonedTimeoutMillis());
 
 		if (StringUtils.isNotEmpty(druidProperties.getValidationQuery())) {
 			// 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
-			dataSource.setTestOnBorrow(druidProperties.getTestOnBorrow());
+			dataSource.setTestOnBorrow(druidProperties.isTestOnBorrow());
 			// 用来检测连接是否有效的sql，要求是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会其作用。
 			dataSource.setValidationQuery(druidProperties.getValidationQuery());
 		} else {
 			DatabaseDriver databaseDriver = DatabaseDriver.fromJdbcUrl(properties.determineUrl());
 			String validationQuery = databaseDriver.getValidationQuery();
 			if (validationQuery != null) {
-				dataSource.setTestOnBorrow(druidProperties.getTestOnBorrow());
+				dataSource.setTestOnBorrow(druidProperties.isTestOnBorrow());
 				dataSource.setValidationQuery(validationQuery);
 			}
 		}
 
 		// 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。建议配置为true，不影响性能，并且保证安全性。
-		dataSource.setTestWhileIdle(druidProperties.getTestWhileIdle());
+		dataSource.setTestWhileIdle(druidProperties.isTestWhileIdle());
 
 		// 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
-		dataSource.setTestOnReturn(druidProperties.getTestOnReturn());
+		dataSource.setTestOnReturn(druidProperties.isTestOnReturn());
 
 		// 是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql5.5以下的版本中没有PSCache功能，建议关闭掉。5.5及以上版本有PSCache，建议开启。
-		dataSource.setPoolPreparedStatements(druidProperties.getPoolPreparedStatements());
+		dataSource.setPoolPreparedStatements(druidProperties.isPoolPreparedStatements());
 		// 要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100
 		dataSource.setMaxOpenPreparedStatements(druidProperties.getMaxPoolPreparedStatementPerConnectionSize());
 
@@ -100,7 +101,7 @@ public class DruidDataSourceUtils {
 		 */
 		try {
 			// 指定过滤器
-			if (BooleanUtils.isTrue(druidProperties.getProxyFilter())) {
+			if (BooleanUtils.isTrue(druidProperties.isProxyFilter())) {
 				dataSource.setProxyFilters(getProxyFilters(druidProperties));
 			} else {
 				dataSource.setFilters(druidProperties.getFilters());
