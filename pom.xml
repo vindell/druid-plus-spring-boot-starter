@@ -13,7 +13,7 @@
 	<groupId>com.github.vindell</groupId>
 	<artifactId>spring-boot-starter-druid-plus</artifactId>
 	<description>Spring Boot Starter For Druid</description>
-	<version>1.0.5-SNAPSHOT</version>
+	<version>1.0.5.RELEASE</version>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<url>https://github.com/vindell/${project.artifactId}</url>
 	<packaging>jar</packaging>
@@ -364,7 +364,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<druid.version>1.1.9</druid.version>
+		<druid.version>1.1.12</druid.version>
 		<maven.version>3.0</maven.version>
        	<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
@@ -372,6 +372,7 @@
         <maven-resources-plugin.version>3.0.2</maven-resources-plugin.version>
         <maven-surefire-plugin.vertsion>2.21.0</maven-surefire-plugin.vertsion>
 		<maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
+		<spring-biz.version>1.0.1.RELEASE</spring-biz.version>  
 	</properties>
 	
 	<dependencies>
@@ -453,7 +454,7 @@
 		<dependency>
 		    <groupId>com.alibaba</groupId>
 		    <artifactId>druid-spring-boot-starter</artifactId>
-		    <version>${druid.version}</version>
+		    <version>1.1.10</version>
 		</dependency>
 		
 		<dependency>
@@ -464,6 +465,11 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.github.vindell</groupId>
+			<artifactId>spring-biz</artifactId>
+			<version>${spring-biz.version}</version>
 		</dependency>
 
 	</dependencies>
