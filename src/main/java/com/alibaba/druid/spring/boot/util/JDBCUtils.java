@@ -2,7 +2,7 @@ package com.alibaba.druid.spring.boot.util;
 
 import java.sql.DriverManager;
 
-import com.alibaba.druid.spring.boot.ds.DataSourceEnum;
+import com.alibaba.druid.spring.boot.ds.DatabaseType;
 
 public class JDBCUtils {
 
@@ -17,8 +17,8 @@ public class JDBCUtils {
 	}
 	
 	public static String getDriverClass(String dbtype) {
-		DataSourceEnum dsEnum = DataSourceEnum.valueOfIgnoreCase(dbtype);
-		return dsEnum != null ? dsEnum.getDriverClass() : null; 
+		DatabaseType dbType = DatabaseType.valueOfIgnoreCase(dbtype);
+		return dbType != null ? dbType.getDriverClass() : null; 
 	}
 	
 }
