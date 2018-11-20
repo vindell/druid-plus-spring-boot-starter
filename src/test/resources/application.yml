@@ -56,26 +56,4 @@ spring:
       pool-prepared-statements: true
       #要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100 
       max-pool-prepared-statement-per-connection-size: 100
-      #Druid的监控统计功能:属性类型是字符串，通过别名的方式配置扩展插件
-      #filters: mergeStat,wall,slf4j
-      # 自定义过滤器参数
-      proxy-filter: true
-      wall-filter:
-        # 对被认为是攻击的SQL进行LOG.error输出
-        log-violation: true
-        # 对被认为是攻击的SQL抛出SQLExcepton
-        throw-exception: true
-        config:
-          # 是否允许语句中存在注释，Oracle的用户不用担心，Wall能够识别hints和注释的区别
-          comment-allow: true
-          # 是否允许非以上基本语句的其他语句，缺省关闭，通过这个选项就能够屏蔽DDL
-          none-base-statement-allow: true
-          # 是否允许一次执行多条语句，缺省关闭 
-          multi-statement-allow: true
-          # 解除union关键字检查
-          select-union-check: false
-          # 是否允许执行锁定表操作
-          lock-table-allow: true
-      dynamic: true
-                
         

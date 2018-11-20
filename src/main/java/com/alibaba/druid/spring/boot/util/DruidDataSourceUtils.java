@@ -1,53 +1,68 @@
 package com.alibaba.druid.spring.boot.util;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.jdbc.DatabaseDriver;
 
-import com.alibaba.druid.filter.Filter;
-import com.alibaba.druid.filter.logging.LogFilter;
+import com.alibaba.druid.filter.config.ConfigFilter;
+import com.alibaba.druid.filter.encoding.EncodingConvertFilter;
+import com.alibaba.druid.filter.logging.CommonsLogFilter;
+import com.alibaba.druid.filter.logging.Log4j2Filter;
+import com.alibaba.druid.filter.logging.Log4jFilter;
+import com.alibaba.druid.filter.logging.Slf4jLogFilter;
 import com.alibaba.druid.filter.stat.StatFilter;
 import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.spring.boot.DruidProperties;
+import com.alibaba.druid.spring.boot.ds.DruidDataSourceProperties;
+import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.druid.wall.WallFilter;
 
 public class DruidDataSourceUtils {
 
-	public static <T extends DataSource> DruidDataSource createDataSource(DataSourceProperties properties, DruidProperties druidProperties,
-			String name, String jdbcUrl, String username, String password) {
+	public static <T extends DataSource> DruidDataSource createDataSource( DruidDataSourceProperties druidProperties ) {
 		
 		DataSourceProperties tmProperties = new DataSourceProperties();
 		
-		tmProperties.setName(properties.getName());
-		tmProperties.setType(properties.getType());
+		tmProperties.setName(druidProperties.getName());
+		tmProperties.setType(com.alibaba.druid.pool.DruidDataSource.class);
 		// 这一项可配可不配，如果不配置druid会根据url自动识别dbType，然后选择相应的driverClassName
-		tmProperties.setDriverClassName(properties.determineDriverClassName());
+		tmProperties.setDriverClassName(druidProperties.getDriverClassName());
 		// jdbcUrl: 连接数据库的url
-		tmProperties.setUrl(jdbcUrl);
+		tmProperties.setUrl(druidProperties.getUrl());
 		// username: 连接数据库的用户名
-		tmProperties.setUsername(username);
+		tmProperties.setUsername(druidProperties.getUsername());
 		// password: 连接数据库的密码
-		tmProperties.setPassword(password);
+		tmProperties.setPassword(druidProperties.getPassword());
 		
 		// 创建 DruidDataSource 数据源对象
 		DruidDataSource dataSource = createDataSource(tmProperties, tmProperties.getType());
+		// 配置 Druid数据源
+		configureProperties(druidProperties, dataSource);
 
+		return dataSource;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T createDataSource(DataSourceProperties properties, Class<? extends DataSource> type) {
+		return (T) properties.initializeDataSourceBuilder().type(type).build();
+	}
+
+	public static void configureProperties(DruidDataSourceProperties druidProperties, DruidDataSource dataSource) {
+		
 		// 配置这个属性的意义在于，如果存在多个数据源，监控的时候可以通过名字来区分开来。如果没有配置，将会生成一个名字，格式是：”DataSource-” +
 		// System.identityHashCode(this)
-		if (StringUtils.isNotEmpty(name)) {
-			dataSource.setName(name);
+		if (StringUtils.isNotEmpty(druidProperties.getName())) {
+			dataSource.setName(druidProperties.getName());
 		}
-
+		
 		// druid 连接池参数
 		dataSource.configFromPropety(druidProperties.toProperties());
-		//DruidDataSourceFactory.config(dataSource, druidProperties);
+		dataSource.setDbType(JdbcUtils.getDbType(druidProperties.getUrl(), null));
 		
 		// 配置初始化大小、最小、最大
 
@@ -75,7 +90,7 @@ public class DruidDataSourceUtils {
 			// 用来检测连接是否有效的sql，要求是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会其作用。
 			dataSource.setValidationQuery(druidProperties.getValidationQuery());
 		} else {
-			DatabaseDriver databaseDriver = DatabaseDriver.fromJdbcUrl(properties.determineUrl());
+			DatabaseDriver databaseDriver = DatabaseDriver.fromJdbcUrl(druidProperties.getUrl());
 			String validationQuery = databaseDriver.getValidationQuery();
 			if (validationQuery != null) {
 				dataSource.setTestOnBorrow(druidProperties.isTestOnBorrow());
@@ -85,7 +100,6 @@ public class DruidDataSourceUtils {
 
 		// 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。建议配置为true，不影响性能，并且保证安全性。
 		dataSource.setTestWhileIdle(druidProperties.isTestWhileIdle());
-
 		// 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
 		dataSource.setTestOnReturn(druidProperties.isTestOnReturn());
 
@@ -100,49 +114,29 @@ public class DruidDataSourceUtils {
 		 */
 		try {
 			// 指定过滤器
-			if (BooleanUtils.isTrue(druidProperties.isProxyFilter())) {
-				dataSource.setProxyFilters(getProxyFilters(druidProperties));
-			} else {
-				dataSource.setFilters(druidProperties.getFilters());
-			}
+			dataSource.setFilters(druidProperties.getFilters());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 		// 额外的链接参数
 		dataSource.setConnectProperties(druidProperties.getConnectionProperties());
-
-		// 注册对象到上下文
-		// configurableBeanFactory.registerSingleton(dataSource.getName(), dataSource);
-
-		return dataSource;
+		
 	}
-
-	@SuppressWarnings("unchecked")
-	public static <T> T createDataSource(DataSourceProperties properties, Class<? extends DataSource> type) {
-		return (T) properties.initializeDataSourceBuilder().type(type).build();
-	}
-
-	public static List<Filter> getProxyFilters(DruidProperties druidProperties) {
-
-		List<Filter> filters = new ArrayList<Filter>();
-
-		WallFilter wallFilter = druidProperties.getWallFilter();
-		if (null != wallFilter) {
-			filters.add(wallFilter);
-		}
-
-		StatFilter statFilter = druidProperties.getStatFilter();
-		if (null != statFilter) {
-			filters.add(statFilter);
-		}
-
-		LogFilter logFilter = druidProperties.getLogFilter();
-		if (null != logFilter) {
-			filters.add(logFilter);
-		}
-
-		return filters;
+	
+	public static void configureFilters(DruidDataSource dataSource, ObjectProvider<StatFilter> statFilters,
+			ObjectProvider<ConfigFilter> configFilters, ObjectProvider<EncodingConvertFilter> encodingConvertFilters,
+			ObjectProvider<Slf4jLogFilter> slf4jLogFilters, ObjectProvider<Log4jFilter> log4jFilters,
+			ObjectProvider<Log4j2Filter> log4j2Filters, ObjectProvider<CommonsLogFilter> commonsLogFilters,
+			ObjectProvider<WallFilter> wallFilters) {
+		dataSource.getProxyFilters().addAll(statFilters.stream().collect(Collectors.toList()));
+		dataSource.getProxyFilters().addAll(configFilters.stream().collect(Collectors.toList()));
+		dataSource.getProxyFilters().addAll(encodingConvertFilters.stream().collect(Collectors.toList()));
+		dataSource.getProxyFilters().addAll(slf4jLogFilters.stream().collect(Collectors.toList()));
+		dataSource.getProxyFilters().addAll(log4jFilters.stream().collect(Collectors.toList()));
+		dataSource.getProxyFilters().addAll(log4j2Filters.stream().collect(Collectors.toList()));
+		dataSource.getProxyFilters().addAll(commonsLogFilters.stream().collect(Collectors.toList()));
+		dataSource.getProxyFilters().addAll(wallFilters.stream().collect(Collectors.toList()));
 	}
 	
 }

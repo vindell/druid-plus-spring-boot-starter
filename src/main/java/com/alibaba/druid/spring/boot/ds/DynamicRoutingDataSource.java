@@ -15,7 +15,6 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.util.ReflectionUtils;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.spring.boot.DruidProperties;
 import com.alibaba.druid.spring.boot.util.DruidDataSourceUtils;
 
 
@@ -52,16 +51,28 @@ public class DynamicRoutingDataSource extends AbstractRoutingDataSource {
 		return (Map<Object, DataSource>) resolvedDataSources;
 	}
 	
-	public void setTargetDataSource(DataSourceProperties properties, DruidProperties druidProperties,
-			String name, String url, String username, String password) {
+	public void setTargetDataSource(String name, DataSourceProperties basicProperties, DruidDataSourceProperties druidProperties) {
 
 		lock.lock();
 		
 		try {
 			
+			//if not found prefix 'spring.datasource.druid' jdbc properties ,'spring.datasource' prefix jdbc properties will be used.
+	        if (druidProperties.getUsername() == null) {
+	        	druidProperties.setUsername(basicProperties.determineUsername());
+	        }
+	        if (druidProperties.getPassword() == null) {
+	        	druidProperties.setPassword(basicProperties.determinePassword());
+	        }
+	        if (druidProperties.getUrl() == null) {
+	        	druidProperties.setUrl(basicProperties.determineUrl());
+	        }
+	        if(druidProperties.getDriverClassName() == null){
+	        	druidProperties.setDriverClassName(basicProperties.determineDriverClassName());
+	        }
+			
 			// 动态创建Druid数据源
-			DruidDataSource targetDataSource = DruidDataSourceUtils.createDataSource(properties, druidProperties, name, 
-					url, username, password);
+			DruidDataSource targetDataSource = DruidDataSourceUtils.createDataSource(druidProperties);
 
 			getTargetDataSources().put(name, targetDataSource);
 			
@@ -74,24 +85,10 @@ public class DynamicRoutingDataSource extends AbstractRoutingDataSource {
 		
 	}
 	
-	/**
-	 * 为动态数据源设置新的数据源目标源集
-	 * @author 		： <a href="https://github.com/vindell">vindell</a>
-	 * @param properties
-	 * @param druidProperties
-	 * @param dsSetting
-	 */
-	public void setTargetDataSource(DataSourceProperties properties, DruidProperties druidProperties,
-			DynamicDataSourceSetting dsSetting) {
-		this.setTargetDataSource(properties, druidProperties, druidProperties.getName(), properties.determineUrl(),
-				properties.determineUsername(), properties.determinePassword());
+	public void setTargetDataSource(DataSourceProperties properties, DruidDataSourceProperties druidProperties) {
+		this.setTargetDataSource(druidProperties.getName(), properties, druidProperties);
 	}
 
-	/**
-	 * 为动态数据源设置新的数据源目标源集合
-	 * @author 		： <a href="https://github.com/vindell">vindell</a>
-	 * @param targetDataSources
-	 */
 	public void setNewTargetDataSources(Map<Object, Object> targetDataSources) {
 		
 		lock.lock();
