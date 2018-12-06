@@ -129,6 +129,7 @@ public class DruidDataSourceUtils {
 			ObjectProvider<Slf4jLogFilter> slf4jLogFilters, ObjectProvider<Log4jFilter> log4jFilters,
 			ObjectProvider<Log4j2Filter> log4j2Filters, ObjectProvider<CommonsLogFilter> commonsLogFilters,
 			ObjectProvider<WallFilter> wallFilters) {
+		dataSource.getProxyFilters().clear();
 		dataSource.getProxyFilters().addAll(statFilters.stream().collect(Collectors.toList()));
 		dataSource.getProxyFilters().addAll(configFilters.stream().collect(Collectors.toList()));
 		dataSource.getProxyFilters().addAll(encodingConvertFilters.stream().collect(Collectors.toList()));
