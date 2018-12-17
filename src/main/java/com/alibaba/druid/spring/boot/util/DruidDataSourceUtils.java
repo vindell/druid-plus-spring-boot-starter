@@ -81,9 +81,9 @@ public class DruidDataSourceUtils {
 		dataSource.setMinEvictableIdleTimeMillis(druidProperties.getMinEvictableIdleTimeMillis());
 		// 超过时间限制是否回收
 		dataSource.setRemoveAbandoned(druidProperties.isRemoveAbandoned());
-		// 超过时间限制多长，单位是秒
-		dataSource.setRemoveAbandonedTimeout(druidProperties.getRemoveAbandonedTimeoutSeconds());
-		
+		// 超过时间限制多久触发回收逻辑，单位是毫秒
+		dataSource.setRemoveAbandonedTimeoutMillis(druidProperties.getRemoveAbandonedTimeoutMillis());
+
 		if (StringUtils.isNotEmpty(druidProperties.getValidationQuery())) {
 			// 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
 			dataSource.setTestOnBorrow(druidProperties.isTestOnBorrow());

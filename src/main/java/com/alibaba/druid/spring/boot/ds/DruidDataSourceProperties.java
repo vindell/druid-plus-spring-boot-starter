@@ -49,8 +49,8 @@ public class DruidDataSourceProperties {
 
 	/** 超过时间限制是否回收 */
 	private boolean removeAbandoned = true;
-	/** 超过时间限制多久触发回收逻辑，单位：秒 ，3600秒=1小时 */
-	private Integer removeAbandonedTimeoutSeconds = 3600;
+	/** 超过时间限制多久触发回收逻辑，单位：毫秒 ，180000毫秒=3分钟 */
+	private Long removeAbandonedTimeoutMillis = 180 * 1000L;
 	private boolean logAbandoned;
 	private Integer connectionErrorRetryAttempts = 1;
 	private boolean breakAfterAcquireFailure = false;
@@ -210,12 +210,12 @@ public class DruidDataSourceProperties {
 		this.removeAbandoned = removeAbandoned;
 	}
 
-	public Integer getRemoveAbandonedTimeoutSeconds() {
-		return removeAbandonedTimeoutSeconds;
+	public Long getRemoveAbandonedTimeoutMillis() {
+		return removeAbandonedTimeoutMillis;
 	}
 
-	public void setRemoveAbandonedTimeoutSeconds(Integer removeAbandonedTimeoutSeconds) {
-		this.removeAbandonedTimeoutSeconds = removeAbandonedTimeoutSeconds;
+	public void setRemoveAbandonedTimeoutMillis(Long removeAbandonedTimeoutMillis) {
+		this.removeAbandonedTimeoutMillis = removeAbandonedTimeoutMillis;
 	}
 
 	public boolean isLogAbandoned() {
