@@ -49,7 +49,7 @@ public class DruidDataSourceProperties {
 
 	/** 超过时间限制是否回收 */
 	private boolean removeAbandoned = true;
-	/** 超过时间限制多长，单位：秒 ，3600秒=1小时 */
+	/** 超过时间限制多久触发回收逻辑，单位：秒 ，3600秒=1小时 */
 	private Integer removeAbandonedTimeoutSeconds = 3600;
 	private boolean logAbandoned;
 	private Integer connectionErrorRetryAttempts = 1;
