@@ -18,7 +18,7 @@
 <dependency>
 	<groupId>com.github.vindell</groupId>
 	<artifactId>spring-boot-starter-druid-plus</artifactId>
-	<version>${project.version}</version>
+	<version>1.0.6.RELEASE</version>
 </dependency>
 ```
 
