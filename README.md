@@ -1,4 +1,4 @@
-# spring-boot-starter-druid-plus
+# druid-plus-spring-boot-starter
 
 
 ### 说明
@@ -17,7 +17,7 @@
 ``` xml
 <dependency>
 	<groupId>com.github.vindell</groupId>
-	<artifactId>spring-boot-starter-druid-plus</artifactId>
+	<artifactId>druid-plus-spring-boot-starter</artifactId>
 	<version>${project.version}</version>
 </dependency>
 ```
