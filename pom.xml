@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.2.RELEASE</version>
+		<version>2.3.0.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
@@ -364,8 +364,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<spring-boot-starter-druid.version>1.1.10</spring-boot-starter-druid.version>
-		<druid.version>1.1.14</druid.version>
+		<druid.version>1.1.23</druid.version>
 		<maven.version>3.0</maven.version>
        	<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
@@ -374,10 +373,8 @@
         <maven-surefire-plugin.vertsion>2.22.1</maven-surefire-plugin.vertsion>
 		<maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
 		<spring-biz.version>1.0.8-SNAPSHOT</spring-biz.version>
-		<sharding-jdbc.version>3.1.0</sharding-jdbc.version>
-		<sharding-transaction.version>3.0.0.M3</sharding-transaction.version>
+		<sharding-jdbc.version>4.1.0</sharding-jdbc.version>
 		<spring-boot-starter-druid.version>${druid.version}</spring-boot-starter-druid.version>
-		<spring-boot-starter-sharding-jdbc.version>${sharding-jdbc.version}</spring-boot-starter-sharding-jdbc.version>
 	</properties>
 	
 	<dependencyManagement>
@@ -388,23 +385,11 @@
 			    <artifactId>druid-spring-boot-starter</artifactId>
 			    <version>${spring-boot-starter-druid.version}</version>
 			</dependency>
-			<!-- https://mvnrepository.com/artifact/io.shardingsphere/sharding-jdbc-spring-boot-starter -->
+			<!-- https://mvnrepository.com/artifact/org.apache.shardingsphere -->
 			<dependency>
-			    <groupId>io.shardingsphere</groupId>
-			    <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
-			    <version>${spring-boot-starter-sharding-jdbc.version}</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/io.shardingsphere/sharding-transaction-spring-boot-starter -->
-			<dependency>
-			    <groupId>io.shardingsphere</groupId>
-			    <artifactId>sharding-transaction-spring-boot-starter</artifactId>
-			    <version>${spring-boot-starter-sharding-jdbc.version}</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/io.shardingsphere/sharding-jdbc-orchestration-spring-boot-starter -->
-			<dependency>
-			    <groupId>io.shardingsphere</groupId>
-			    <artifactId>sharding-jdbc-orchestration-spring-boot-starter</artifactId>
-			    <version>${spring-boot-starter-sharding-jdbc.version}</version>
+				<groupId>org.apache.shardingsphere</groupId>
+				<artifactId>sharding-jdbc-core</artifactId>
+				<version>${sharding-jdbc.version}</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/com.github.hiwepy/spring-biz -->
 			<dependency>

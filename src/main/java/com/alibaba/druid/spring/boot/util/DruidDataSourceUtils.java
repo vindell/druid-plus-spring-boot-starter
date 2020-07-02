@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.PropertyMapper;
 import org.springframework.boot.jdbc.DatabaseDriver;
 
 import com.alibaba.druid.filter.config.ConfigFilter;
@@ -52,6 +53,10 @@ public class DruidDataSourceUtils {
 		return (T) properties.initializeDataSourceBuilder().type(type).build();
 	}
 
+	/*
+	 * DruidDataSource配置属性列表：
+	 * https://github.com/alibaba/druid/wiki/DruidDataSource%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7%E5%88%97%E8%A1%A8
+	 */
 	public static void configureProperties(DruidDataSourceProperties druidProperties, DruidDataSource dataSource) {
 		
 		// 配置这个属性的意义在于，如果存在多个数据源，监控的时候可以通过名字来区分开来。如果没有配置，将会生成一个名字，格式是：”DataSource-” +
@@ -60,54 +65,70 @@ public class DruidDataSourceUtils {
 			dataSource.setName(druidProperties.getName());
 		}
 		
+    	/**
+		 * 批量设置参数
+		 */
+		PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+		
 		// druid 连接池参数
 		dataSource.configFromPropety(druidProperties.toProperties());
 		dataSource.setDbType(JdbcUtils.getDbType(druidProperties.getUrl(), null));
 		
 		// 配置初始化大小、最小、最大
-
+		
 		// minIdle: 最小空闲连接数量
-		dataSource.setMinIdle(druidProperties.getMinIdle());
+		map.from(druidProperties.getMinIdle()).to(dataSource::setMinIdle);
 		// maxActive: 最大连接池数量
-		dataSource.setMaxActive(druidProperties.getMaxActive());
+		map.from(druidProperties.getMaxActive()).to(dataSource::setMaxActive);
 		// initialSize: 初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时
-		dataSource.setInitialSize(druidProperties.getInitialSize());
+		map.from(druidProperties.getInitialSize()).to(dataSource::setInitialSize);
 		// 获取连接时最大等待时间，单位毫秒。配置了maxWait之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置useUnfairLock属性为true使用非公平锁。
-		dataSource.setMaxWait(druidProperties.getMaxWait());
-		// 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒;有两个含义：1) Destroy线程会检测连接的间隔时间 2)
-		// testWhileIdle的判断依据，详细看testWhileIdle属性的说明
-		dataSource.setTimeBetweenEvictionRunsMillis(druidProperties.getTimeBetweenEvictionRunsMillis());
+		map.from(druidProperties.getMaxWait()).to(dataSource::setMaxWait);
+		// 连接池中的minIdle数量以内的连接，空闲时间超过minEvictableIdleTimeMillis，则会执行keepAlive操作。
+		map.from(druidProperties.isKeepAlive()).to(dataSource::setKeepAlive);
+		// 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒;
+		// 有两个含义：
+		// 1) Destroy线程会检测连接的间隔时间，如果连接空闲时间大于等于minEvictableIdleTimeMillis则关闭物理连接。
+		// 2) testWhileIdle的判断依据，详细看testWhileIdle属性的说明
+		map.from(druidProperties.getTimeBetweenEvictionRunsMillis()).to(dataSource::setTimeBetweenEvictionRunsMillis);
 		// 配置一个连接在池中最小生存的时间，单位是毫秒
-		dataSource.setMinEvictableIdleTimeMillis(druidProperties.getMinEvictableIdleTimeMillis());
+		map.from(druidProperties.getMinEvictableIdleTimeMillis()).to(dataSource::setMinEvictableIdleTimeMillis);
 		// 超过时间限制是否回收
-		dataSource.setRemoveAbandoned(druidProperties.isRemoveAbandoned());
+		map.from(druidProperties.isRemoveAbandoned()).to(dataSource::setRemoveAbandoned);
 		// 超过时间限制多久触发回收逻辑，单位是毫秒
-		dataSource.setRemoveAbandonedTimeoutMillis(druidProperties.getRemoveAbandonedTimeoutMillis());
+		map.from(druidProperties.getRemoveAbandonedTimeoutMillis()).to(dataSource::setRemoveAbandonedTimeoutMillis);
 
 		if (StringUtils.isNotEmpty(druidProperties.getValidationQuery())) {
 			// 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
-			dataSource.setTestOnBorrow(druidProperties.isTestOnBorrow());
+			map.from(druidProperties.isTestOnBorrow()).to(dataSource::setTestOnBorrow);
 			// 用来检测连接是否有效的sql，要求是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会其作用。
-			dataSource.setValidationQuery(druidProperties.getValidationQuery());
+			map.from(druidProperties.getValidationQuery()).to(dataSource::setValidationQuery);
+			// 单位：秒，检测连接是否有效的超时时间。底层调用jdbc Statement对象的void setQueryTimeout(int seconds)方法
+			map.from(druidProperties.getValidationQueryTimeout()).to(dataSource::setValidationQueryTimeout);
 		} else {
 			DatabaseDriver databaseDriver = DatabaseDriver.fromJdbcUrl(druidProperties.getUrl());
 			String validationQuery = databaseDriver.getValidationQuery();
 			if (validationQuery != null) {
-				dataSource.setTestOnBorrow(druidProperties.isTestOnBorrow());
-				dataSource.setValidationQuery(validationQuery);
+				// 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。
+				map.from(druidProperties.isTestOnBorrow()).to(dataSource::setTestOnBorrow);
+				// 用来检测连接是否有效的sql，要求是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会其作用。
+				map.from(validationQuery).to(dataSource::setValidationQuery);
+				// 单位：秒，检测连接是否有效的超时时间。底层调用jdbc Statement对象的void setQueryTimeout(int seconds)方法
+				map.from(druidProperties.getValidationQueryTimeout()).to(dataSource::setValidationQueryTimeout);
 			}
 		}
 
 		// 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。建议配置为true，不影响性能，并且保证安全性。
-		dataSource.setTestWhileIdle(druidProperties.isTestWhileIdle());
+		map.from(druidProperties.isTestWhileIdle()).to(dataSource::setTestWhileIdle);
 		// 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能
-		dataSource.setTestOnReturn(druidProperties.isTestOnReturn());
+		map.from(druidProperties.isTestOnReturn()).to(dataSource::setTestOnReturn);
 
 		// 是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql5.5以下的版本中没有PSCache功能，建议关闭掉。5.5及以上版本有PSCache，建议开启。
-		dataSource.setPoolPreparedStatements(druidProperties.isPoolPreparedStatements());
+		map.from(druidProperties.isPoolPreparedStatements()).to(dataSource::setPoolPreparedStatements);
 		// 要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100
-		dataSource.setMaxOpenPreparedStatements(druidProperties.getMaxPoolPreparedStatementPerConnectionSize());
-
+		map.from(druidProperties.getMaxPoolPreparedStatementPerConnectionSize()).to(dataSource::setMaxOpenPreparedStatements);
+		
+		
 		/*
 		 * Druid的监控统计功能:属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有： #监控统计用的filter:stat
 		 * #日志用的filter:log4j #防御SQL注入的filter:wall
@@ -120,7 +141,7 @@ public class DruidDataSourceUtils {
 		}
 
 		// 额外的链接参数
-		dataSource.setConnectProperties(druidProperties.getConnectionProperties());
+		map.from(druidProperties.getConnectionProperties()).to(dataSource::setConnectProperties);
 		
 	}
 	
