@@ -1,5 +1,6 @@
 package com.alibaba.druid.spring.boot.ds;
 
+import java.util.List;
 import java.util.Properties;
 
 import org.springframework.util.StringUtils;
@@ -36,7 +37,44 @@ public class DruidDataSourceProperties {
 	private String dbType;
 
 	/** druid 连接池参数 */
+	
+	private boolean accessToUnderlyingConnectionAllowed = true;
+	private boolean asyncCloseConnectionEnable = false;
+	private boolean asyncInit = false;
+	private boolean checkExecuteTime = false;
+	private boolean clearFiltersEnable = true;
+	
+	private boolean defaultAutoCommit = true;
+	private boolean defaultReadOnly;
+	private Integer defaultTransactionIsolation;
+	private String  defaultCatalog = null;
+	private boolean dupCloseLogEnable = false;
 
+	private boolean failFast;
+	private String initConnectionSqls;
+	private List<String> connectionInitSqls;
+	private boolean initExceptionThrow = true;
+	private boolean initGlobalVariants = false;
+	private boolean initVariants = false;
+	private boolean keepAlive;
+	private long keepAliveBetweenTimeMillis = DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS * 2;
+	private boolean killWhenSocketReadTimeout = false;
+
+	private boolean logAbandoned;
+	private boolean logDifferentThread = true;
+	private int loginTimeout = 0;
+	
+	/**
+	 * 获取连接时最大等待时间，单位毫秒。配置了maxWait之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置useUnfairLock属性为true使用非公平锁。
+	 */
+	private Integer maxWait = DruidAbstractDataSource.DEFAULT_MAX_WAIT;
+	private Integer maxWaitThreadCount = -1;
+
+	private Integer notFullTimeoutRetryCount = 0;
+	
+	private Long phyTimeoutMillis = DruidAbstractDataSource.DEFAULT_PHY_TIMEOUT_MILLIS;
+	private Long phyMaxUseCount = -1L;
+	
 	/** 配置初始化大小、最小、最大 连接池数量 */
 
 	/**
@@ -51,20 +89,18 @@ public class DruidDataSourceProperties {
 	private boolean removeAbandoned;
 	/** 超过时间限制多久触发回收逻辑，单位：毫秒 ，180000毫秒=3分钟 */
 	private Long removeAbandonedTimeoutMillis = 300 * 1000L;
-    
-	private boolean logAbandoned;
+	 private boolean  resetStatEnable           = true;
+	 
+	 
 	private Integer connectionErrorRetryAttempts = 1;
 	private boolean breakAfterAcquireFailure = false;
 
-	private boolean clearFiltersEnable;
 	private String connectProperties;
 	/** maxActive: 连接池最大连接数量 */
 	private Integer maxActive = DruidAbstractDataSource.DEFAULT_MAX_ACTIVE_SIZE;
-	/**
-	 * 获取连接时最大等待时间，单位毫秒。配置了maxWait之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置useUnfairLock属性为true使用非公平锁。
-	 */
-	private Integer maxWait = DruidAbstractDataSource.DEFAULT_MAX_WAIT;
-	private Integer maxWaitThreadCount = -1;
+	private int maxCreateTaskCount                        = 3;
+	
+	private int queryTimeout;
 
 	private Integer maxIdle = DruidAbstractDataSource.DEFAULT_MAX_IDLE;
 	/** minIdle: 连接池最小连接数量 */
@@ -78,23 +114,19 @@ public class DruidDataSourceProperties {
 	private Long maxEvictableIdleTimeMillis = DruidAbstractDataSource.DEFAULT_MAX_EVICTABLE_IDLE_TIME_MILLIS;
 	/** 配置一个连接在池中最小生存的时间，单位：毫秒 */
 	private Long minEvictableIdleTimeMillis = DruidAbstractDataSource.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+	
 
-	private Integer notFullTimeoutRetryCount = 0;
-
-	private boolean failFast;
 	/**
 	 * Druid的监控统计功能:属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有： #监控统计用的filter:stat
 	 * #日志用的filter:slf4j #防御SQL注入的filter:wall
 	 * 开启Druid的监控统计功能，mergeStat代替stat表示sql合并,wall表示防御SQL注入攻击
 	 */
 	private String filters = "mergeStat,wall,slf4j";
-	private Long phyTimeoutMillis = DruidAbstractDataSource.DEFAULT_PHY_TIMEOUT_MILLIS;
-	private Long phyMaxUseCount = -1L;
+	
 	/**
 	 * 是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql5.5以下的版本中没有PSCache功能，建议关闭掉。5.5及以上版本有PSCache，建议开启。
 	 */
 	private boolean poolPreparedStatements = false;
-	private boolean resetStatEnable;
 	private Integer statSqlMaxSize;
 	private boolean sharePreparedStatements = false;
 	/**
@@ -107,21 +139,27 @@ public class DruidDataSourceProperties {
 	private boolean testOnReturn = DruidAbstractDataSource.DEFAULT_TEST_ON_RETURN;
 	private Long timeBetweenConnectErrorMillis = DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_CONNECT_ERROR_MILLIS;
 	private Long timeBetweenLogStatsMillis;
+	private int transactionQueryTimeout;
 	private Long transactionThresholdMillis = 0L;
-	private boolean keepAlive;
-	private boolean killWhenSocketReadTimeout;
-	private String initConnectionSqls;
-	private boolean initGlobalVariants;
-	private boolean initVariants;
+	
 	/** initialSize: 初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时 */
 	private Integer initialSize = DruidAbstractDataSource.DEFAULT_INITIAL_SIZE;
 	private boolean useUnfairLock;
+	private boolean useLocalSessionState = true;
 	private boolean useGlobalDataSourceStat;
 	/**
 	 * 用来检测连接是否有效的sql，要求是一个查询语句。如果validationQuery为null，testOnBorrow、testOnReturn、testWhileIdle都不会其作用。
 	 */
 	private String validationQuery = "SELECT 1";
 	private Integer validationQueryTimeout = -1;
+
+	public String getDbType() {
+		return StringUtils.hasText(dbType) ? dbType : JdbcUtils.getDbType(this.getUrl(), null);
+	}
+
+	public void setDbType(String dbType) {
+		this.dbType = dbType;
+	}
 
 	public String getDriverClassName() {
 		return driverClassName;
@@ -171,12 +209,220 @@ public class DruidDataSourceProperties {
 		this.connectionProperties = connectionProperties;
 	}
 
-	public String getDbType() {
-		return StringUtils.hasText(dbType) ? dbType : JdbcUtils.getDbType(this.getUrl(), null);
+	public boolean isAccessToUnderlyingConnectionAllowed() {
+		return accessToUnderlyingConnectionAllowed;
 	}
 
-	public void setDbType(String dbType) {
-		this.dbType = dbType;
+	public void setAccessToUnderlyingConnectionAllowed(boolean accessToUnderlyingConnectionAllowed) {
+		this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;
+	}
+
+	public boolean isAsyncCloseConnectionEnable() {
+		return asyncCloseConnectionEnable;
+	}
+
+	public void setAsyncCloseConnectionEnable(boolean asyncCloseConnectionEnable) {
+		this.asyncCloseConnectionEnable = asyncCloseConnectionEnable;
+	}
+
+	public boolean isAsyncInit() {
+		return asyncInit;
+	}
+
+	public void setAsyncInit(boolean asyncInit) {
+		this.asyncInit = asyncInit;
+	}
+
+	public boolean isCheckExecuteTime() {
+		return checkExecuteTime;
+	}
+
+	public void setCheckExecuteTime(boolean checkExecuteTime) {
+		this.checkExecuteTime = checkExecuteTime;
+	}
+
+	public boolean isClearFiltersEnable() {
+		return clearFiltersEnable;
+	}
+
+	public void setClearFiltersEnable(boolean clearFiltersEnable) {
+		this.clearFiltersEnable = clearFiltersEnable;
+	}
+
+	public boolean isDefaultAutoCommit() {
+		return defaultAutoCommit;
+	}
+
+	public void setDefaultAutoCommit(boolean defaultAutoCommit) {
+		this.defaultAutoCommit = defaultAutoCommit;
+	}
+
+	public boolean isDefaultReadOnly() {
+		return defaultReadOnly;
+	}
+
+	public void setDefaultReadOnly(boolean defaultReadOnly) {
+		this.defaultReadOnly = defaultReadOnly;
+	}
+
+	public Integer getDefaultTransactionIsolation() {
+		return defaultTransactionIsolation;
+	}
+
+	public void setDefaultTransactionIsolation(Integer defaultTransactionIsolation) {
+		this.defaultTransactionIsolation = defaultTransactionIsolation;
+	}
+
+	public String getDefaultCatalog() {
+		return defaultCatalog;
+	}
+
+	public void setDefaultCatalog(String defaultCatalog) {
+		this.defaultCatalog = defaultCatalog;
+	}
+
+	public boolean isDupCloseLogEnable() {
+		return dupCloseLogEnable;
+	}
+
+	public void setDupCloseLogEnable(boolean dupCloseLogEnable) {
+		this.dupCloseLogEnable = dupCloseLogEnable;
+	}
+
+	public boolean isFailFast() {
+		return failFast;
+	}
+
+	public void setFailFast(boolean failFast) {
+		this.failFast = failFast;
+	}
+
+	public String getInitConnectionSqls() {
+		return initConnectionSqls;
+	}
+
+	public void setInitConnectionSqls(String initConnectionSqls) {
+		this.initConnectionSqls = initConnectionSqls;
+	}
+
+	public List<String> getConnectionInitSqls() {
+		return connectionInitSqls;
+	}
+
+	public void setConnectionInitSqls(List<String> connectionInitSqls) {
+		this.connectionInitSqls = connectionInitSqls;
+	}
+
+	public boolean isInitExceptionThrow() {
+		return initExceptionThrow;
+	}
+
+	public void setInitExceptionThrow(boolean initExceptionThrow) {
+		this.initExceptionThrow = initExceptionThrow;
+	}
+
+	public boolean isInitGlobalVariants() {
+		return initGlobalVariants;
+	}
+
+	public void setInitGlobalVariants(boolean initGlobalVariants) {
+		this.initGlobalVariants = initGlobalVariants;
+	}
+
+	public boolean isInitVariants() {
+		return initVariants;
+	}
+
+	public void setInitVariants(boolean initVariants) {
+		this.initVariants = initVariants;
+	}
+
+	public boolean isKeepAlive() {
+		return keepAlive;
+	}
+
+	public void setKeepAlive(boolean keepAlive) {
+		this.keepAlive = keepAlive;
+	}
+
+	public long getKeepAliveBetweenTimeMillis() {
+		return keepAliveBetweenTimeMillis;
+	}
+
+	public void setKeepAliveBetweenTimeMillis(long keepAliveBetweenTimeMillis) {
+		this.keepAliveBetweenTimeMillis = keepAliveBetweenTimeMillis;
+	}
+
+	public boolean isKillWhenSocketReadTimeout() {
+		return killWhenSocketReadTimeout;
+	}
+
+	public void setKillWhenSocketReadTimeout(boolean killWhenSocketReadTimeout) {
+		this.killWhenSocketReadTimeout = killWhenSocketReadTimeout;
+	}
+
+	public boolean isLogAbandoned() {
+		return logAbandoned;
+	}
+
+	public void setLogAbandoned(boolean logAbandoned) {
+		this.logAbandoned = logAbandoned;
+	}
+
+	public boolean isLogDifferentThread() {
+		return logDifferentThread;
+	}
+
+	public void setLogDifferentThread(boolean logDifferentThread) {
+		this.logDifferentThread = logDifferentThread;
+	}
+
+	public int getLoginTimeout() {
+		return loginTimeout;
+	}
+
+	public void setLoginTimeout(int loginTimeout) {
+		this.loginTimeout = loginTimeout;
+	}
+
+	public Integer getMaxWait() {
+		return maxWait;
+	}
+
+	public void setMaxWait(Integer maxWait) {
+		this.maxWait = maxWait;
+	}
+
+	public Integer getMaxWaitThreadCount() {
+		return maxWaitThreadCount;
+	}
+
+	public void setMaxWaitThreadCount(Integer maxWaitThreadCount) {
+		this.maxWaitThreadCount = maxWaitThreadCount;
+	}
+
+	public Integer getNotFullTimeoutRetryCount() {
+		return notFullTimeoutRetryCount;
+	}
+
+	public void setNotFullTimeoutRetryCount(Integer notFullTimeoutRetryCount) {
+		this.notFullTimeoutRetryCount = notFullTimeoutRetryCount;
+	}
+
+	public Long getPhyTimeoutMillis() {
+		return phyTimeoutMillis;
+	}
+
+	public void setPhyTimeoutMillis(Long phyTimeoutMillis) {
+		this.phyTimeoutMillis = phyTimeoutMillis;
+	}
+
+	public Long getPhyMaxUseCount() {
+		return phyMaxUseCount;
+	}
+
+	public void setPhyMaxUseCount(Long phyMaxUseCount) {
+		this.phyMaxUseCount = phyMaxUseCount;
 	}
 
 	public Long getTimeBetweenEvictionRunsMillis() {
@@ -219,12 +465,12 @@ public class DruidDataSourceProperties {
 		this.removeAbandonedTimeoutMillis = removeAbandonedTimeoutMillis;
 	}
 
-	public boolean isLogAbandoned() {
-		return logAbandoned;
+	public boolean isResetStatEnable() {
+		return resetStatEnable;
 	}
 
-	public void setLogAbandoned(boolean logAbandoned) {
-		this.logAbandoned = logAbandoned;
+	public void setResetStatEnable(boolean resetStatEnable) {
+		this.resetStatEnable = resetStatEnable;
 	}
 
 	public Integer getConnectionErrorRetryAttempts() {
@@ -243,14 +489,6 @@ public class DruidDataSourceProperties {
 		this.breakAfterAcquireFailure = breakAfterAcquireFailure;
 	}
 
-	public boolean isClearFiltersEnable() {
-		return clearFiltersEnable;
-	}
-
-	public void setClearFiltersEnable(boolean clearFiltersEnable) {
-		this.clearFiltersEnable = clearFiltersEnable;
-	}
-
 	public String getConnectProperties() {
 		return connectProperties;
 	}
@@ -267,20 +505,20 @@ public class DruidDataSourceProperties {
 		this.maxActive = maxActive;
 	}
 
-	public Integer getMaxWait() {
-		return maxWait;
+	public int getMaxCreateTaskCount() {
+		return maxCreateTaskCount;
 	}
 
-	public void setMaxWait(Integer maxWait) {
-		this.maxWait = maxWait;
+	public void setMaxCreateTaskCount(int maxCreateTaskCount) {
+		this.maxCreateTaskCount = maxCreateTaskCount;
 	}
 
-	public Integer getMaxWaitThreadCount() {
-		return maxWaitThreadCount;
+	public int getQueryTimeout() {
+		return queryTimeout;
 	}
 
-	public void setMaxWaitThreadCount(Integer maxWaitThreadCount) {
-		this.maxWaitThreadCount = maxWaitThreadCount;
+	public void setQueryTimeout(int queryTimeout) {
+		this.queryTimeout = queryTimeout;
 	}
 
 	public Integer getMaxIdle() {
@@ -323,22 +561,6 @@ public class DruidDataSourceProperties {
 		this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
 	}
 
-	public Integer getNotFullTimeoutRetryCount() {
-		return notFullTimeoutRetryCount;
-	}
-
-	public void setNotFullTimeoutRetryCount(Integer notFullTimeoutRetryCount) {
-		this.notFullTimeoutRetryCount = notFullTimeoutRetryCount;
-	}
-
-	public boolean isFailFast() {
-		return failFast;
-	}
-
-	public void setFailFast(boolean failFast) {
-		this.failFast = failFast;
-	}
-
 	public String getFilters() {
 		return filters;
 	}
@@ -347,36 +569,12 @@ public class DruidDataSourceProperties {
 		this.filters = filters;
 	}
 
-	public Long getPhyTimeoutMillis() {
-		return phyTimeoutMillis;
-	}
-
-	public void setPhyTimeoutMillis(Long phyTimeoutMillis) {
-		this.phyTimeoutMillis = phyTimeoutMillis;
-	}
-
-	public Long getPhyMaxUseCount() {
-		return phyMaxUseCount;
-	}
-
-	public void setPhyMaxUseCount(Long phyMaxUseCount) {
-		this.phyMaxUseCount = phyMaxUseCount;
-	}
-
 	public boolean isPoolPreparedStatements() {
 		return poolPreparedStatements;
 	}
 
 	public void setPoolPreparedStatements(boolean poolPreparedStatements) {
 		this.poolPreparedStatements = poolPreparedStatements;
-	}
-
-	public boolean isResetStatEnable() {
-		return resetStatEnable;
-	}
-
-	public void setResetStatEnable(boolean resetStatEnable) {
-		this.resetStatEnable = resetStatEnable;
 	}
 
 	public Integer getStatSqlMaxSize() {
@@ -435,52 +633,20 @@ public class DruidDataSourceProperties {
 		this.timeBetweenLogStatsMillis = timeBetweenLogStatsMillis;
 	}
 
+	public int getTransactionQueryTimeout() {
+		return transactionQueryTimeout;
+	}
+
+	public void setTransactionQueryTimeout(int transactionQueryTimeout) {
+		this.transactionQueryTimeout = transactionQueryTimeout;
+	}
+
 	public Long getTransactionThresholdMillis() {
 		return transactionThresholdMillis;
 	}
 
 	public void setTransactionThresholdMillis(Long transactionThresholdMillis) {
 		this.transactionThresholdMillis = transactionThresholdMillis;
-	}
-
-	public boolean isKeepAlive() {
-		return keepAlive;
-	}
-
-	public void setKeepAlive(boolean keepAlive) {
-		this.keepAlive = keepAlive;
-	}
-
-	public boolean isKillWhenSocketReadTimeout() {
-		return killWhenSocketReadTimeout;
-	}
-
-	public void setKillWhenSocketReadTimeout(boolean killWhenSocketReadTimeout) {
-		this.killWhenSocketReadTimeout = killWhenSocketReadTimeout;
-	}
-
-	public String getInitConnectionSqls() {
-		return initConnectionSqls;
-	}
-
-	public void setInitConnectionSqls(String initConnectionSqls) {
-		this.initConnectionSqls = initConnectionSqls;
-	}
-
-	public boolean isInitGlobalVariants() {
-		return initGlobalVariants;
-	}
-
-	public void setInitGlobalVariants(boolean initGlobalVariants) {
-		this.initGlobalVariants = initGlobalVariants;
-	}
-
-	public boolean isInitVariants() {
-		return initVariants;
-	}
-
-	public void setInitVariants(boolean initVariants) {
-		this.initVariants = initVariants;
 	}
 
 	public Integer getInitialSize() {
@@ -505,6 +671,16 @@ public class DruidDataSourceProperties {
 
 	public void setUseGlobalDataSourceStat(boolean useGlobalDataSourceStat) {
 		this.useGlobalDataSourceStat = useGlobalDataSourceStat;
+	}
+
+	
+	
+	public boolean isUseLocalSessionState() {
+		return useLocalSessionState;
+	}
+
+	public void setUseLocalSessionState(boolean useLocalSessionState) {
+		this.useLocalSessionState = useLocalSessionState;
 	}
 
 	public String getValidationQuery() {
