@@ -373,8 +373,7 @@
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
 		<maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
 		<spring-biz.version>1.0.8-SNAPSHOT</spring-biz.version>
-		<sharding-jdbc.version>4.1.0</sharding-jdbc.version>
-		<spring-boot-starter-druid.version>${druid.version}</spring-boot-starter-druid.version>
+		<sharding-jdbc.version>4.1.1</sharding-jdbc.version>
 	</properties>
 	
 	<dependencyManagement>
@@ -383,7 +382,7 @@
 			<dependency>
 			    <groupId>com.alibaba</groupId>
 			    <artifactId>druid-spring-boot-starter</artifactId>
-			    <version>${spring-boot-starter-druid.version}</version>
+			    <version>${druid.version}</version>
 			</dependency>
 			<!-- https://mvnrepository.com/artifact/org.apache.shardingsphere -->
 			<dependency>
