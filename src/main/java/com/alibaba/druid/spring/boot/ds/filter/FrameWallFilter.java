@@ -16,6 +16,12 @@
 package com.alibaba.druid.spring.boot.ds.filter;
 
 
+import java.lang.reflect.Field;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.alibaba.druid.DbType;
 import com.alibaba.druid.filter.FilterChain;
 import com.alibaba.druid.proxy.jdbc.CallableStatementProxy;
 import com.alibaba.druid.proxy.jdbc.ConnectionProxy;
@@ -31,11 +37,6 @@ import com.alibaba.druid.wall.spi.OracleWallProvider;
 import com.alibaba.druid.wall.spi.PGWallProvider;
 import com.alibaba.druid.wall.spi.SQLServerWallProvider;
 
-import java.lang.reflect.Field;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * https://segmentfault.com/a/1190000014590536?utm_source=tag-newest
  * 自定义Druid防火墙过滤器
@@ -48,7 +49,7 @@ public class FrameWallFilter extends WallFilter {
   /**
    * 用线程安全的ConcurrentHashMap存储WallProvider对象
    */
-  private final Map<String, WallProvider> providerMap = new ConcurrentHashMap<>(8);
+  private final Map<DbType, WallProvider> providerMap = new ConcurrentHashMap<>(8);
 
 	/**
 	 * 获取WallProvider

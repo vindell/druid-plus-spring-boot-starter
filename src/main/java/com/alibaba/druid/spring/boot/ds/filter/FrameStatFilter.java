@@ -30,7 +30,6 @@ public class FrameStatFilter extends StatFilter {
 	
 	@Override
 	public JdbcSqlStat createSqlStat(StatementProxy statement, String sql) {
-		super.setDbType(null);
 		return super.createSqlStat(statement, sql);
 	}
 	
