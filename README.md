@@ -18,7 +18,7 @@
 <dependency>
 	<groupId>com.github.hiwepy</groupId>
 	<artifactId>druid-plus-spring-boot-starter</artifactId>
-	<version>${project.version}</version>
+	<version>1.1.0.RELEASE</version>
 </dependency>
 ```
 
