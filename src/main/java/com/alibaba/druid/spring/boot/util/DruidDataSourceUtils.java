@@ -71,8 +71,6 @@ public class DruidDataSourceUtils {
 		PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		
 		// druid 连接池参数
-		dataSource.configFromPropety(druidProperties.toProperties());
-		
 		map.from(druidProperties.isAccessToUnderlyingConnectionAllowed()).to(dataSource::setAccessToUnderlyingConnectionAllowed);
 		map.from(druidProperties.isAsyncCloseConnectionEnable()).to(dataSource::setAsyncCloseConnectionEnable);
 		map.from(druidProperties.isAsyncInit()).to(dataSource::setAsyncInit);
