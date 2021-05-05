@@ -118,22 +118,20 @@ public class DruidAutoConfiguration {
 			if (!CollectionUtils.isEmpty(druidProperties.getSlaves())) {
 				for (DruidDataSourceProperties slaveProperties : druidProperties.getSlaves()) {
 			        // 动态创建Druid数据源
-			        DruidDataSource slaveDataSource = DruidDataSourceUtils.createDataSource(configureProperties(basicProperties, slaveProperties)) ;
+			        DruidDataSource slaveDataSource = DruidDataSourceUtils.createDataSource(slaveProperties.configureProperties(basicProperties)) ;
 			        // 配置过滤器
 			        DruidDataSourceUtils.configureFilters(slaveDataSource, statFilters, configFilters, encodingConvertFilters, slf4jLogFilters, log4jFilters, log4j2Filters, commonsLogFilters, wallFilters);
 					// 加入数据源
 			        targetDataSources.put(slaveProperties.getName(), slaveDataSource);
 				}
-				
 			}
 			// 动态数据源支持
 			DynamicRoutingDataSource dataSource = new DynamicRoutingDataSource();
-			dataSource.setTargetDataSources(targetDataSources);// 该方法是AbstractRoutingDataSource的方法
+			dataSource.setTargetDataSources(targetDataSources); // 该方法是AbstractRoutingDataSource的方法
 
 			// 默认的数据源
-			DruidDataSource masterDataSource = DruidDataSourceBuilder.create().build();
+			DruidDataSource masterDataSource = DruidDataSourceUtils.createDataSource(druidProperties.configureProperties(basicProperties)) ; 
 			// 配置过滤器
-			DruidDataSourceUtils.configureProperties(configureProperties(basicProperties, druidProperties), masterDataSource);
 			DruidDataSourceUtils.configureFilters(masterDataSource, statFilters, configFilters, encodingConvertFilters, slf4jLogFilters, log4jFilters, log4j2Filters, commonsLogFilters, wallFilters);
 			dataSource.setDefaultTargetDataSource(masterDataSource);
 			
@@ -141,28 +139,7 @@ public class DruidAutoConfiguration {
 			
 		}
 		
-		configureProperties(basicProperties, druidProperties);
 		return DruidDataSourceBuilder.create().build();
-	}
-	
-	private DruidDataSourceProperties configureProperties(DataSourceProperties basicProperties, DruidDataSourceProperties druidProperties) {
-		//if not found prefix 'spring.datasource.druid' jdbc properties ,'spring.datasource' prefix jdbc properties will be used.
-        if (druidProperties.getUsername() == null) {
-        	druidProperties.setUsername(basicProperties.determineUsername());
-        }
-        if (druidProperties.getName() == null) {
-        	druidProperties.setName(basicProperties.getName());
-        }
-        if (druidProperties.getPassword() == null) {
-        	druidProperties.setPassword(basicProperties.determinePassword());
-        }
-        if (druidProperties.getUrl() == null) {
-        	druidProperties.setUrl(basicProperties.determineUrl());
-        }
-        if(druidProperties.getDriverClassName() == null){
-        	druidProperties.setDriverClassName(basicProperties.determineDriverClassName());
-        }
-        return druidProperties;
 	}
 
 }

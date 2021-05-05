@@ -3,12 +3,16 @@ package com.alibaba.druid.spring.boot.ds;
 import java.util.List;
 import java.util.Properties;
 
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.util.StringUtils;
 
 import com.alibaba.druid.pool.DruidAbstractDataSource;
 import com.alibaba.druid.util.JdbcUtils;
 
+import lombok.Data;
+
 @SuppressWarnings("serial")
+@Data
 public class DruidDataSourceProperties {
 
 	/** 基本属性 url、user、password */
@@ -51,7 +55,6 @@ public class DruidDataSourceProperties {
 	private boolean dupCloseLogEnable = false;
 
 	private boolean failFast;
-	private String initConnectionSqls;
 	private List<String> connectionInitSqls;
 	private boolean initExceptionThrow = true;
 	private boolean initGlobalVariants = false;
@@ -157,587 +160,17 @@ public class DruidDataSourceProperties {
 		return StringUtils.hasText(dbType) ? dbType : JdbcUtils.getDbType(this.getUrl(), null);
 	}
 
-	public void setDbType(String dbType) {
-		this.dbType = dbType;
-	}
-
-	public String getDriverClassName() {
-		return driverClassName;
-	}
-
-	public void setDriverClassName(String driverClassName) {
-		this.driverClassName = driverClassName;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Properties getConnectionProperties() {
-		return connectionProperties;
-	}
-
-	public void setConnectionProperties(Properties connectionProperties) {
-		this.connectionProperties = connectionProperties;
-	}
-
-	public boolean isAccessToUnderlyingConnectionAllowed() {
-		return accessToUnderlyingConnectionAllowed;
-	}
-
-	public void setAccessToUnderlyingConnectionAllowed(boolean accessToUnderlyingConnectionAllowed) {
-		this.accessToUnderlyingConnectionAllowed = accessToUnderlyingConnectionAllowed;
-	}
-
-	public boolean isAsyncCloseConnectionEnable() {
-		return asyncCloseConnectionEnable;
-	}
-
-	public void setAsyncCloseConnectionEnable(boolean asyncCloseConnectionEnable) {
-		this.asyncCloseConnectionEnable = asyncCloseConnectionEnable;
-	}
-
-	public boolean isAsyncInit() {
-		return asyncInit;
-	}
-
-	public void setAsyncInit(boolean asyncInit) {
-		this.asyncInit = asyncInit;
-	}
-
-	public boolean isCheckExecuteTime() {
-		return checkExecuteTime;
-	}
-
-	public void setCheckExecuteTime(boolean checkExecuteTime) {
-		this.checkExecuteTime = checkExecuteTime;
-	}
-
-	public boolean isClearFiltersEnable() {
-		return clearFiltersEnable;
-	}
-
-	public void setClearFiltersEnable(boolean clearFiltersEnable) {
-		this.clearFiltersEnable = clearFiltersEnable;
-	}
-
-	public boolean isDefaultAutoCommit() {
-		return defaultAutoCommit;
-	}
-
-	public void setDefaultAutoCommit(boolean defaultAutoCommit) {
-		this.defaultAutoCommit = defaultAutoCommit;
-	}
-
-	public boolean isDefaultReadOnly() {
-		return defaultReadOnly;
-	}
-
-	public void setDefaultReadOnly(boolean defaultReadOnly) {
-		this.defaultReadOnly = defaultReadOnly;
-	}
-
-	public Integer getDefaultTransactionIsolation() {
-		return defaultTransactionIsolation;
-	}
-
-	public void setDefaultTransactionIsolation(Integer defaultTransactionIsolation) {
-		this.defaultTransactionIsolation = defaultTransactionIsolation;
-	}
-
-	public String getDefaultCatalog() {
-		return defaultCatalog;
-	}
-
-	public void setDefaultCatalog(String defaultCatalog) {
-		this.defaultCatalog = defaultCatalog;
-	}
-
-	public boolean isDupCloseLogEnable() {
-		return dupCloseLogEnable;
-	}
-
-	public void setDupCloseLogEnable(boolean dupCloseLogEnable) {
-		this.dupCloseLogEnable = dupCloseLogEnable;
-	}
-
-	public boolean isFailFast() {
-		return failFast;
-	}
-
-	public void setFailFast(boolean failFast) {
-		this.failFast = failFast;
-	}
-
-	public String getInitConnectionSqls() {
-		return initConnectionSqls;
-	}
-
-	public void setInitConnectionSqls(String initConnectionSqls) {
-		this.initConnectionSqls = initConnectionSqls;
-	}
-
-	public List<String> getConnectionInitSqls() {
-		return connectionInitSqls;
-	}
-
-	public void setConnectionInitSqls(List<String> connectionInitSqls) {
-		this.connectionInitSqls = connectionInitSqls;
-	}
-
-	public boolean isInitExceptionThrow() {
-		return initExceptionThrow;
-	}
-
-	public void setInitExceptionThrow(boolean initExceptionThrow) {
-		this.initExceptionThrow = initExceptionThrow;
-	}
-
-	public boolean isInitGlobalVariants() {
-		return initGlobalVariants;
-	}
-
-	public void setInitGlobalVariants(boolean initGlobalVariants) {
-		this.initGlobalVariants = initGlobalVariants;
-	}
-
-	public boolean isInitVariants() {
-		return initVariants;
-	}
-
-	public void setInitVariants(boolean initVariants) {
-		this.initVariants = initVariants;
-	}
-
-	public boolean isKeepAlive() {
-		return keepAlive;
-	}
-
-	public void setKeepAlive(boolean keepAlive) {
-		this.keepAlive = keepAlive;
-	}
-
-	public long getKeepAliveBetweenTimeMillis() {
-		return keepAliveBetweenTimeMillis;
-	}
-
-	public void setKeepAliveBetweenTimeMillis(long keepAliveBetweenTimeMillis) {
-		this.keepAliveBetweenTimeMillis = keepAliveBetweenTimeMillis;
-	}
-
-	public boolean isKillWhenSocketReadTimeout() {
-		return killWhenSocketReadTimeout;
-	}
-
-	public void setKillWhenSocketReadTimeout(boolean killWhenSocketReadTimeout) {
-		this.killWhenSocketReadTimeout = killWhenSocketReadTimeout;
-	}
-
-	public boolean isLogAbandoned() {
-		return logAbandoned;
-	}
-
-	public void setLogAbandoned(boolean logAbandoned) {
-		this.logAbandoned = logAbandoned;
-	}
-
-	public boolean isLogDifferentThread() {
-		return logDifferentThread;
-	}
-
-	public void setLogDifferentThread(boolean logDifferentThread) {
-		this.logDifferentThread = logDifferentThread;
-	}
-
-	public int getLoginTimeout() {
-		return loginTimeout;
-	}
-
-	public void setLoginTimeout(int loginTimeout) {
-		this.loginTimeout = loginTimeout;
-	}
-
-	public Integer getMaxWait() {
-		return maxWait;
-	}
-
-	public void setMaxWait(Integer maxWait) {
-		this.maxWait = maxWait;
-	}
-
-	public Integer getMaxWaitThreadCount() {
-		return maxWaitThreadCount;
-	}
-
-	public void setMaxWaitThreadCount(Integer maxWaitThreadCount) {
-		this.maxWaitThreadCount = maxWaitThreadCount;
-	}
-
-	public Integer getNotFullTimeoutRetryCount() {
-		return notFullTimeoutRetryCount;
-	}
-
-	public void setNotFullTimeoutRetryCount(Integer notFullTimeoutRetryCount) {
-		this.notFullTimeoutRetryCount = notFullTimeoutRetryCount;
-	}
-
-	public Long getPhyTimeoutMillis() {
-		return phyTimeoutMillis;
-	}
-
-	public void setPhyTimeoutMillis(Long phyTimeoutMillis) {
-		this.phyTimeoutMillis = phyTimeoutMillis;
-	}
-
-	public Long getPhyMaxUseCount() {
-		return phyMaxUseCount;
-	}
-
-	public void setPhyMaxUseCount(Long phyMaxUseCount) {
-		this.phyMaxUseCount = phyMaxUseCount;
-	}
-
-	public Long getTimeBetweenEvictionRunsMillis() {
-		return timeBetweenEvictionRunsMillis;
-	}
-
-	public void setTimeBetweenEvictionRunsMillis(Long timeBetweenEvictionRunsMillis) {
-		this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
-	}
-
-	public Integer getMaxOpenPreparedStatements() {
-		return maxOpenPreparedStatements;
-	}
-
-	public void setMaxOpenPreparedStatements(Integer maxOpenPreparedStatements) {
-		this.maxOpenPreparedStatements = maxOpenPreparedStatements;
-	}
-
-	public Integer getNumTestsPerEvictionRun() {
-		return numTestsPerEvictionRun;
-	}
-
-	public void setNumTestsPerEvictionRun(Integer numTestsPerEvictionRun) {
-		this.numTestsPerEvictionRun = numTestsPerEvictionRun;
-	}
-
-	public boolean isRemoveAbandoned() {
-		return removeAbandoned;
-	}
-
-	public void setRemoveAbandoned(boolean removeAbandoned) {
-		this.removeAbandoned = removeAbandoned;
-	}
-
-	public Long getRemoveAbandonedTimeoutMillis() {
-		return removeAbandonedTimeoutMillis;
-	}
-
-	public void setRemoveAbandonedTimeoutMillis(Long removeAbandonedTimeoutMillis) {
-		this.removeAbandonedTimeoutMillis = removeAbandonedTimeoutMillis;
-	}
-
-	public boolean isResetStatEnable() {
-		return resetStatEnable;
-	}
-
-	public void setResetStatEnable(boolean resetStatEnable) {
-		this.resetStatEnable = resetStatEnable;
-	}
-
-	public Integer getConnectionErrorRetryAttempts() {
-		return connectionErrorRetryAttempts;
-	}
-
-	public void setConnectionErrorRetryAttempts(Integer connectionErrorRetryAttempts) {
-		this.connectionErrorRetryAttempts = connectionErrorRetryAttempts;
-	}
-
-	public boolean isBreakAfterAcquireFailure() {
-		return breakAfterAcquireFailure;
-	}
-
-	public void setBreakAfterAcquireFailure(boolean breakAfterAcquireFailure) {
-		this.breakAfterAcquireFailure = breakAfterAcquireFailure;
-	}
-
-	public String getConnectProperties() {
-		return connectProperties;
-	}
-
-	public void setConnectProperties(String connectProperties) {
-		this.connectProperties = connectProperties;
-	}
-
-	public Integer getMaxActive() {
-		return maxActive;
-	}
-
-	public void setMaxActive(Integer maxActive) {
-		this.maxActive = maxActive;
-	}
-
-	public int getMaxCreateTaskCount() {
-		return maxCreateTaskCount;
-	}
-
-	public void setMaxCreateTaskCount(int maxCreateTaskCount) {
-		this.maxCreateTaskCount = maxCreateTaskCount;
-	}
-
-	public int getQueryTimeout() {
-		return queryTimeout;
-	}
-
-	public void setQueryTimeout(int queryTimeout) {
-		this.queryTimeout = queryTimeout;
-	}
-
-	public Integer getMaxIdle() {
-		return maxIdle;
-	}
-
-	public void setMaxIdle(Integer maxIdle) {
-		this.maxIdle = maxIdle;
-	}
-
-	public Integer getMinIdle() {
-		return minIdle;
-	}
-
-	public void setMinIdle(Integer minIdle) {
-		this.minIdle = minIdle;
-	}
-
-	public Integer getMaxPoolPreparedStatementPerConnectionSize() {
-		return maxPoolPreparedStatementPerConnectionSize;
-	}
-
-	public void setMaxPoolPreparedStatementPerConnectionSize(Integer maxPoolPreparedStatementPerConnectionSize) {
-		this.maxPoolPreparedStatementPerConnectionSize = maxPoolPreparedStatementPerConnectionSize;
-	}
-
-	public Long getMaxEvictableIdleTimeMillis() {
-		return maxEvictableIdleTimeMillis;
-	}
-
-	public void setMaxEvictableIdleTimeMillis(Long maxEvictableIdleTimeMillis) {
-		this.maxEvictableIdleTimeMillis = maxEvictableIdleTimeMillis;
-	}
-
-	public Long getMinEvictableIdleTimeMillis() {
-		return minEvictableIdleTimeMillis;
-	}
-
-	public void setMinEvictableIdleTimeMillis(Long minEvictableIdleTimeMillis) {
-		this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
-	}
-
-	public String getFilters() {
-		return filters;
-	}
-
-	public void setFilters(String filters) {
-		this.filters = filters;
-	}
-
-	public boolean isPoolPreparedStatements() {
-		return poolPreparedStatements;
-	}
-
-	public void setPoolPreparedStatements(boolean poolPreparedStatements) {
-		this.poolPreparedStatements = poolPreparedStatements;
-	}
-
-	public Integer getStatSqlMaxSize() {
-		return statSqlMaxSize;
-	}
-
-	public void setStatSqlMaxSize(Integer statSqlMaxSize) {
-		this.statSqlMaxSize = statSqlMaxSize;
-	}
-
-	public boolean isSharePreparedStatements() {
-		return sharePreparedStatements;
-	}
-
-	public void setSharePreparedStatements(boolean sharePreparedStatements) {
-		this.sharePreparedStatements = sharePreparedStatements;
-	}
-
-	public boolean isTestWhileIdle() {
-		return testWhileIdle;
-	}
-
-	public void setTestWhileIdle(boolean testWhileIdle) {
-		this.testWhileIdle = testWhileIdle;
-	}
-
-	public boolean isTestOnBorrow() {
-		return testOnBorrow;
-	}
-
-	public void setTestOnBorrow(boolean testOnBorrow) {
-		this.testOnBorrow = testOnBorrow;
-	}
-
-	public boolean isTestOnReturn() {
-		return testOnReturn;
-	}
-
-	public void setTestOnReturn(boolean testOnReturn) {
-		this.testOnReturn = testOnReturn;
-	}
-
-	public Long getTimeBetweenConnectErrorMillis() {
-		return timeBetweenConnectErrorMillis;
-	}
-
-	public void setTimeBetweenConnectErrorMillis(Long timeBetweenConnectErrorMillis) {
-		this.timeBetweenConnectErrorMillis = timeBetweenConnectErrorMillis;
-	}
-
-	public Long getTimeBetweenLogStatsMillis() {
-		return timeBetweenLogStatsMillis;
-	}
-
-	public void setTimeBetweenLogStatsMillis(Long timeBetweenLogStatsMillis) {
-		this.timeBetweenLogStatsMillis = timeBetweenLogStatsMillis;
-	}
-
-	public int getTransactionQueryTimeout() {
-		return transactionQueryTimeout;
-	}
-
-	public void setTransactionQueryTimeout(int transactionQueryTimeout) {
-		this.transactionQueryTimeout = transactionQueryTimeout;
-	}
-
-	public Long getTransactionThresholdMillis() {
-		return transactionThresholdMillis;
-	}
-
-	public void setTransactionThresholdMillis(Long transactionThresholdMillis) {
-		this.transactionThresholdMillis = transactionThresholdMillis;
-	}
-
-	public Integer getInitialSize() {
-		return initialSize;
-	}
-
-	public void setInitialSize(Integer initialSize) {
-		this.initialSize = initialSize;
-	}
-
-	public boolean isUseUnfairLock() {
-		return useUnfairLock;
-	}
-
-	public void setUseUnfairLock(boolean useUnfairLock) {
-		this.useUnfairLock = useUnfairLock;
-	}
-
-	public boolean isUseGlobalDataSourceStat() {
-		return useGlobalDataSourceStat;
-	}
-
-	public void setUseGlobalDataSourceStat(boolean useGlobalDataSourceStat) {
-		this.useGlobalDataSourceStat = useGlobalDataSourceStat;
-	}
-
-	
-	
-	public boolean isUseLocalSessionState() {
-		return useLocalSessionState;
-	}
-
-	public void setUseLocalSessionState(boolean useLocalSessionState) {
-		this.useLocalSessionState = useLocalSessionState;
-	}
-
-	public String getValidationQuery() {
-		return validationQuery;
-	}
-
-	public void setValidationQuery(String validationQuery) {
-		this.validationQuery = validationQuery;
-	}
-
-	public Integer getValidationQueryTimeout() {
-		return validationQueryTimeout;
-	}
-
-	public void setValidationQueryTimeout(Integer validationQueryTimeout) {
-		this.validationQueryTimeout = validationQueryTimeout;
-	}
-
 	public Properties toProperties() {
 
 		Properties properties = new Properties();
 
-		notNullAdd(properties, "clearFiltersEnable", this.clearFiltersEnable);
-		notNullAdd(properties, "connectProperties", this.connectProperties);
-		notNullAdd(properties, "driverClassName", this.driverClassName);
-		notNullAdd(properties, "maxActive", this.maxActive);
-		notNullAdd(properties, "maxEvictableIdleTimeMillis", this.maxEvictableIdleTimeMillis);
-		notNullAdd(properties, "maxPoolPreparedStatementPerConnectionSize",
-				this.maxPoolPreparedStatementPerConnectionSize);
-		notNullAdd(properties, "maxWaitThreadCount", this.maxWaitThreadCount);
-		notNullAdd(properties, "minIdle", this.minIdle);
-		notNullAdd(properties, "minEvictableIdleTimeMillis", this.minEvictableIdleTimeMillis);
 		notNullAdd(properties, "name", this.name);
-		notNullAdd(properties, "notFullTimeoutRetryCount", this.notFullTimeoutRetryCount);
-		notNullAdd(properties, "failFast", this.failFast);
-		notNullAdd(properties, "filters", this.filters);
-		notNullAdd(properties, "initConnectionSqls", this.initConnectionSqls);
-		notNullAdd(properties, "initVariants", this.initVariants);
-		notNullAdd(properties, "initGlobalVariants", this.initGlobalVariants);
-		notNullAdd(properties, "initialSize", this.initialSize);
-		notNullAdd(properties, "keepAlive", this.keepAlive);
-		notNullAdd(properties, "killWhenSocketReadTimeout", this.killWhenSocketReadTimeout);
-		notNullAdd(properties, "password", this.password);
-		notNullAdd(properties, "phyMaxUseCount", this.phyMaxUseCount);
-		notNullAdd(properties, "phyTimeoutMillis", this.phyTimeoutMillis);
-		notNullAdd(properties, "poolPreparedStatements", this.poolPreparedStatements);
-		notNullAdd(properties, "resetStatEnable", this.resetStatEnable);
-		notNullAdd(properties, "stat.sql.MaxSize", this.statSqlMaxSize);
-		notNullAdd(properties, "testOnBorrow", this.testOnBorrow);
-		notNullAdd(properties, "testWhileIdle", this.testWhileIdle);
-		notNullAdd(properties, "timeBetweenEvictionRunsMillis", this.timeBetweenEvictionRunsMillis);
-		notNullAdd(properties, "timeBetweenLogStatsMillis", this.timeBetweenLogStatsMillis);
+		notNullAdd(properties, "driverClassName", this.driverClassName);
 		notNullAdd(properties, "url", this.url);
 		notNullAdd(properties, "username", this.username);
-		notNullAdd(properties, "useUnfairLock", this.useUnfairLock);
-		notNullAdd(properties, "useGlobalDataSourceStat", this.useGlobalDataSourceStat);
-		notNullAdd(properties, "validationQuery", this.validationQuery);
+		notNullAdd(properties, "password", this.password);
+		notNullAdd(properties, "stat.sql.MaxSize", this.statSqlMaxSize);
+		
 		return properties;
 	}
 
@@ -745,6 +178,27 @@ public class DruidDataSourceProperties {
 		if (value != null) {
 			properties.setProperty("druid." + key, value.toString());
 		}
+	}
+	
+	
+	public DruidDataSourceProperties configureProperties(DataSourceProperties basicProperties) {
+		 //if not found prefix 'spring.datasource.druid' jdbc properties ,'spring.datasource' prefix jdbc properties will be used.
+		if (this.getName() == null) {
+        	this.setName(basicProperties.getName());
+        }
+		if (this.getUsername() == null) {
+        	this.setUsername(basicProperties.determineUsername());
+        }
+        if (this.getPassword() == null) {
+        	this.setPassword(basicProperties.determinePassword());
+        }
+        if (this.getUrl() == null) {
+        	this.setUrl(basicProperties.determineUrl());
+        }
+        if(this.getDriverClassName() == null){
+        	this.setDriverClassName(basicProperties.determineDriverClassName());
+        }
+        return this;
 	}
 
 }

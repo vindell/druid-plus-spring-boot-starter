@@ -69,6 +69,9 @@ public class DruidDataSourceUtils {
 		 * 批量设置参数
 		 */
 		PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
+
+		// druid 连接池参数
+		//dataSource.configFromPropety(druidProperties.toProperties());
 		
 		// druid 连接池参数
 		map.from(druidProperties.isAccessToUnderlyingConnectionAllowed()).to(dataSource::setAccessToUnderlyingConnectionAllowed);
@@ -92,12 +95,14 @@ public class DruidDataSourceUtils {
 		 * Druid的监控统计功能:属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有： #监控统计用的filter:stat
 		 * #日志用的filter:log4j #防御SQL注入的filter:wall
 		 */
-		try {
-			// 指定过滤器
-			dataSource.setFilters(druidProperties.getFilters());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		// 指定过滤器
+		map.from(druidProperties.getFilters()).to(filters -> {
+			try {
+				dataSource.setFilters(filters);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		});
 		map.from(druidProperties.isInitExceptionThrow()).to(dataSource::setInitExceptionThrow);
 		map.from(druidProperties.isInitGlobalVariants()).to(dataSource::setInitGlobalVariants);
 		map.from(druidProperties.isInitVariants()).to(dataSource::setInitVariants);
