@@ -21,8 +21,8 @@ spring:
       # 最大连接池数量（按需配置）。缺省值：10；推荐的公式：((core_count * 2) + effective_spindle_count)，如我的服务器2核一个盘那就是 （2*2）+1=5
       # core_count: CPU核心数
       # effective_spindle_count is the number of disks in a RAID.就是磁盘列阵中的硬盘数
-      # 例：虚拟机核心数量是8，磁盘是6磁盘的阵列，计算方式为：（8*2）+ 6 = 22
-      max-active: 10
+      # 例：虚拟机CPU核心数量是：8，磁盘是6个磁盘的RAID阵列，计算方式为：（8*2）+ 6 = 22
+      max-active: 22
       # 获取连接时最大等待时间，单位毫秒。配置了maxWait之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置useUnfairLock属性为true使用非公平锁
       max-wait: 60000
       # 最小连接池数量（按需配置）；默认 5
