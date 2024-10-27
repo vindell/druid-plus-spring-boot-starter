@@ -127,7 +127,8 @@ public class DruidAutoConfiguration {
 			}
 			// 动态数据源支持
 			DynamicRoutingDataSource dataSource = new DynamicRoutingDataSource();
-			dataSource.setTargetDataSources(targetDataSources); // 该方法是AbstractRoutingDataSource的方法
+			// 该方法是AbstractRoutingDataSource的方法
+			dataSource.setTargetDataSources(targetDataSources);
 
 			// 默认的数据源
 			DruidDataSource masterDataSource = DruidDataSourceUtils.createDataSource(druidProperties.configureProperties(basicProperties)) ; 
